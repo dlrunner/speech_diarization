@@ -78,3 +78,4 @@ text = get_audio()
 # 5. 음성 파일을 텍스트로 변환하여 파일로 저장
 with open('memo.txt', 'w', encoding='utf-8') as f:
     f.write(str(text) + "\n")
+    
