@@ -20,7 +20,7 @@ async def create_upload_file(file: UploadFile):
         print(str(turn.start) + " -- " + str(turn.end) + " -- " + str(turn.duration)+ " -- " + str(turn.overlaps))
 
     with open('audio.rttm') as f:
-    lines = f.readlines()
+        lines = f.readlines()
 
     for line in lines:
         line = line.replace('\r','').replace('\n','')
