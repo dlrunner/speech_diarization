@@ -45,10 +45,10 @@ for file_name in file_list:
         print("----" * 10)
 
 # 화자별 텍스트 출력
-for speaker_id, texts in speaker_texts.items():
-    print(f"화자 {speaker_id}의 전체 텍스트:")
-    for text in texts:
-        print(text)
-    print("====" * 10)
+# for speaker_id, texts in speaker_texts.items():
+#     print(f"화자 {speaker_id}의 전체 텍스트:")
+#     for text in texts:
+#         print(text)
+#     print("====" * 10)
 
 print("총 소요 시간:", time.time() - start)
