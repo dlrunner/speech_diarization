@@ -7,8 +7,8 @@ r = sr.Recognizer()
 start = time.time()
 
 # 세그먼트 파일 경로 설정
-seg_keyword = "speech2"
-seg_filepath = "file_segments\\" + seg_keyword + "_segments"
+seg_keyword = "speech2" # 파일명 변수로 받음
+seg_filepath = "file_segments\\" + seg_keyword + "_segments"    # 잘려진 음성파일이 저장된 경로 지정
 
 # 화자별 텍스트 저장을 위한 딕셔너리 초기화
 speaker_texts = {}
@@ -16,8 +16,8 @@ speaker_texts = {}
 # 세그먼트 파일 목록 가져오기
 file_list = [f for f in os.listdir(seg_filepath) if f.endswith(".wav")]
 
-# 파일 이름에서 nnnn 부분 추출 및 정렬
-file_list.sort(key=lambda x: int(x.split('_')[2].split('.')[0]))
+# 파일 이름에서 nnnn 부분 추출 및 정렬 -> nnnn은 음성파일에서 화자 존재하기 시작한 시간(분,초)
+file_list.sort(key=lambda x: int(x.split('_')[2].split('.')[0]))    # 시간 순서대로 정렬
 
 # 각 파일에 대해 음성 인식 수행
 for file_name in file_list:

@@ -6,14 +6,14 @@ AudioSegment.converter = 'C:\\ffmpeg\\bin\\ffmpeg.exe'
 #some silence. Not really needed but add it to create some space between the segments
 silence_duration = 1000
 some_silence = AudioSegment.silent(duration=silence_duration) 
-org_filename = "speech2"
-org_filepath = "source\\" + org_filename
-output_folder = "file_segments\\" + org_filename + "_segments\\"
+org_filename = "speech2"    # 파일명 변수로 받음
+org_filepath = "source\\" + org_filename    # 잘라낼 wav파일 원본 경로/파일명 (.wav)확장자명 없는상태
+output_folder = "file_segments\\" + org_filename + "_segments\\"    # 잘라낸 음성파일 새로 저장할 경로 -> file_segments/파일명_segments/
 
-if not os.path.exists(output_folder):
+if not os.path.exists(output_folder):   # 잘라낸 음성파일 새로 저장할 경로로 폴더 생성
     os.makedirs(output_folder)
 #my audio file from file
-my_original_audio = AudioSegment.from_wav(org_filepath + ".wav")
+my_original_audio = AudioSegment.from_wav(org_filepath + ".wav")    # 잘라내기 전 원본 음성파일 변수로 지정
 
 #read the RTTM file and process the contents
 with open(org_filename + '.rttm') as f:
