@@ -39,7 +39,7 @@ async def create_upload_file(file: UploadFile):
         os.makedirs(output_folder)
 
     with open(rttm_name) as f:
-        lines = f.readlines()
+            lines = f.readlines()
 
     for line in lines:
         line = line.replace('\r','').replace('\n','')
