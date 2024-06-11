@@ -1,4 +1,3 @@
-# 1. speech를 참고하여 rttm 파일에 화자 분류 데이터 저장(오디오는 아직 파일 분류 x)
 from pyannote.audio import Pipeline
 from pydub import AudioSegment
 import time
@@ -8,17 +7,20 @@ pipeline = Pipeline.from_pretrained(
   "pyannote/speaker-diarization-3.1",
   use_auth_token="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")
 
+org_filename = "speech2"
+org_filepath = "source\\" + org_filename
+
 # run the pipeline on an audio file
 # t1 = 119 * 1000 #Works in milliseconds
 # t2 = 179 * 1000
 # newAudio = AudioSegment.from_wav("speech.wav")
 # newAudio = newAudio[t1:t2]
 # newAudio.export('speech2.wav', format="wav")
-diarization = pipeline("speech2.wav")
+diarization = pipeline(org_filepath + ".wav")
 
 
 # dump the diarization output to disk using RTTM format
-with open("audio.rttm", "w") as rttm:
+with open(org_filename + ".rttm", "w") as rttm:
     diarization.write_rttm(rttm)
 for turn, _, speaker in diarization.itertracks(yield_label=True):
     print(str(turn.start) + " -- " + str(turn.end) + " -- " + str(turn.duration)+ " -- " + str(turn.overlaps))

@@ -1,16 +1,22 @@
-#2. rttm 파일을 참고하여 speech 파일을 화자분할
 from pydub import AudioSegment
+import os
+
 AudioSegment.converter = 'C:\\ffmpeg\\bin\\ffmpeg.exe'
 
 #some silence. Not really needed but add it to create some space between the segments
 silence_duration = 1000
 some_silence = AudioSegment.silent(duration=silence_duration) 
+org_filename = "speech2"
+org_filepath = "source\\" + org_filename
+output_folder = "file_segments\\" + org_filename + "_segments\\"
 
+if not os.path.exists(output_folder):
+    os.makedirs(output_folder)
 #my audio file from file
-my_original_audio = AudioSegment.from_wav("speech.wav")
+my_original_audio = AudioSegment.from_wav(org_filepath + ".wav")
 
 #read the RTTM file and process the contents
-with open('audio.rttm') as f:
+with open(org_filename + '.rttm') as f:
     lines = f.readlines()
 
 for line in lines:
@@ -22,7 +28,7 @@ for line in lines:
     seg_duration = int(line_arr[4].replace('.',''))
     seg_speaker = line_arr[7]
     seg_end = seg_start + seg_duration
-    audio_segment_file_name = "file_segments\\" + seg_speaker + str(seg_start) + ".wav"
+    audio_segment_file_name = output_folder + seg_speaker + "_" + str(seg_start) + ".wav"
     
     #an empty segemnt for new audio. The silence probably not necessary but lets add it for now
     # empty = AudioSegment.empty()
