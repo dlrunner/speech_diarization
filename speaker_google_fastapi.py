@@ -8,13 +8,18 @@ pipeline = Pipeline.from_pretrained(
   "pyannote/speaker-diarization-3.1",
   use_auth_token="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")
 
+user = 'user001'
+username = user + '_' + str(time.time())
+
 app = FastAPI()
 @app.post("/uploadfile/")
 async def create_upload_file(file: UploadFile):
     byte_file = await file.read()
     audio = io.BytesIO(byte_file)
     diarization = pipeline(audio)
-    with open("audio.rttm", "w") as rttm:
+
+    rttm_name =  username + ".rttm"
+    with open(rttm_name, "w") as rttm:
         diarization.write_rttm(rttm)
     for turn, _, speaker in diarization.itertracks(yield_label=True):
         print(str(turn.start) + " -- " + str(turn.end) + " -- " + str(turn.duration)+ " -- " + str(turn.overlaps))
