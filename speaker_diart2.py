@@ -1,3 +1,4 @@
+#2. rttm 파일을 참고하여 speech 파일을 화자분할
 from pydub import AudioSegment
 AudioSegment.converter = 'C:\\ffmpeg\\bin\\ffmpeg.exe'
 

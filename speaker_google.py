@@ -1,3 +1,4 @@
+# 3. 분할된 오디오 파일에서 transcript를 작성(오디오 -> 텍스트 변환)
 import speech_recognition as sr
 import time
 r = sr.Recognizer()
