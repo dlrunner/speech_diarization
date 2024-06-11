@@ -1,3 +1,4 @@
+# 적용되어야 할 파일.
 import speech_recognition as sr  # pip install SpeechRecognition
 from gtts import gTTS
 import os
@@ -13,6 +14,7 @@ import wave
 
 # 음성을 입력할 마이크 생성.
 mic = sr.Microphone(device_index=1)
+recd = False
 
 # 안내 음성 출력을 위한 메소드
 def speak(text):
@@ -22,12 +24,12 @@ def speak(text):
     playsound.playsound(filename)  # 위에서 생성한 음성 파일을 실행.
     os.remove(filename)  # 해당 부분이 없으면, 퍼미션 에러 발생. 이후에 파일 생성 시 문제가 되는 듯.
 
-recd = False
+
 frames = []
 def record_audio():
-    
     print("음성녹음을 시작합니다.")
     recd = True
+    return recd
 
 def save_audio(frames, filename='make.wav'):
     with wave.open(filename, 'wb') as wf:
@@ -37,6 +39,7 @@ def save_audio(frames, filename='make.wav'):
         wf.writeframes(b''.join(frames))
 
 def get_audio():
+    global recd
     excute = True
     while excute:
         r = sr.Recognizer()
@@ -49,11 +52,12 @@ def get_audio():
             try:
                 said = r.recognize_google(audio, language='ko-KR')
                 print("말씀하신 내용입니다 : ", said)
-
+                print('recd', recd)
                 if(recd):
                     frames.append(audio.get_wav_data())
+                    print('들어왔니')
                 if '레코딩' in said:
-                    record_audio()
+                    recd = record_audio()
 
                 if '종료' in said:
                     print('음성녹음을 종료합니다.')
@@ -66,7 +70,7 @@ def get_audio():
     return said
 
 # 1. 안내 방송 음성 출력
-speak("안녕하세요. 2초 후에 '말씀하세요' 라는 문장이 화면에 출력된 후 말씀하시면 해당 내용이 텍스트로 저장 됩니다.")
+speak("안녕하세요. 2초 후에 '말씀하세요'")
 
 # 2. 음성입력(메소드 호출)
 text = get_audio()
