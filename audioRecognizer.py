@@ -74,6 +74,7 @@ class VoiceRecognizer:
     def get_audio(self):
         
         print("AI를 이용한 음성 녹음 프로그램을 시작합니다.")
+        all_said = []
         excute = True
         while excute:
             
@@ -84,11 +85,12 @@ class VoiceRecognizer:
                 # timeout           : 음성 처리 전 대기 시간                             : 1초
                 # phrase_time_limit : 음성 처리 시간(사용자의 음성을 마이크 처리하는 term) : 5초
                 inputAudio = forPrtRz.listen(source, timeout=2, phrase_time_limit=5)                                                        
-                self.frames.append(inputAudio.get_wav_data())
+                #self.frames.append(inputAudio.get_wav_data())
                 said       = " "                                                        #초기화인 듯.
                 try:
 
                     said = forPrtRz.recognize_google(inputAudio, language='ko-KR')
+                    all_said.append(said)
                     print("마이크로 입력 된 음성 내용 화면에 출력: ", said)
                     
                     # 음성 내용 중 '녹음'이 있고, 객체의 recd 값이 False 일때.
@@ -111,4 +113,5 @@ class VoiceRecognizer:
                 except Exception as e:
                     print("예상치 못한 오류가 발생했습니다: " + str(e))
 
-        return said
+        print("전체 음성 내용 : ", all_said)
+        return ' '.join(all_said)

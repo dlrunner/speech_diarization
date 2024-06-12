@@ -65,6 +65,7 @@ class VoiceRecognizer:
 
     def get_audio(self):
         print("프로그램을 시작합니다.")
+        all_said = []
         execute = True
         recognizer = sr.Recognizer()
         while execute:
@@ -73,6 +74,7 @@ class VoiceRecognizer:
                 audio = recognizer.listen(source, timeout=1, phrase_time_limit=10)
                 try:
                     said = recognizer.recognize_google(audio, language='ko-KR')
+                    all_said.append(said)
                     print("음성 내용 출력:", said)
 
                     if '녹음' in said and not self.recording:
@@ -88,6 +90,8 @@ class VoiceRecognizer:
                     print(f"구글 API 요청 중 오류가 발생했습니다: {e}")
                 except Exception as e:
                     print(f"예상치 못한 오류가 발생했습니다: {e}")
+
+        return ' '.join(all_said)               
 
 #if __name__ == "__main__":
     #recorder = VoiceRecorder()
