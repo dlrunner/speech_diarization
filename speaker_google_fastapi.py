@@ -6,6 +6,7 @@ from pydub import AudioSegment
 import os
 import speech_recognition as sr
 import joblib
+from fastapi.middleware.cors import CORSMiddleware
 
 pipeline = Pipeline.from_pretrained(
   "pyannote/speaker-diarization-3.1",
@@ -17,6 +18,13 @@ some_silence = AudioSegment.silent(duration=silence_duration)
 r = sr.Recognizer()
 
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],                      # 허용할 도메인 또는 "*" (모든 도메인 허용)
+    allow_credentials=True,                   # 자격 증명 (쿠키 등)을 허용할지 여부
+    allow_methods=["*"],                      # 허용할 HTTP 메서드
+    allow_headers=["*"],                      # 허용할 HTTP 헤더
+)
 @app.post("/uploadfile/")
 async def create_upload_file(file: UploadFile):
     
