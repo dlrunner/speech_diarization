@@ -26,18 +26,18 @@ async def create_upload_file(file: UploadFile):
     # org_filepath = "source\\" + org_filename  # 변수에 담은 파일명에 경로추가 -> 경로/파일명
     output_folder = "file_segments\\" + org_filename + "_segments\\"    # 잘라낸 음성파일 새로 저장할 경로 -> file_segments/파일명_segments/
     seg_filepath = "file_segments\\" + org_filename + "_segments"    # 잘려진 음성파일이 저장된 경로 지정
-    rttm_dirs = "rttm_dirs"
+    rttm_dirs = "rttm_dirs" # rttm 파일 저장할 새 디렉터리
 
     byte_file = await file.read()
     audio = io.BytesIO(byte_file)
     diarization = pipeline(audio)
 
-    if not os.path.exists(rttm_dirs):
+    if not os.path.exists(rttm_dirs):   # rttm 디렉터리 생성
         os.makedirs(rttm_dirs)
 
     # rttm_name =  org_filename + ".rttm"
     rttm_name = os.path.join(rttm_dirs, org_filename + ".rttm")
-    with open(rttm_name, "w") as rttm: # 파일명.rttm 으로 저장
+    with open(rttm_name, "w") as rttm: # rttm_dirs/파일명.rttm 저장
         diarization.write_rttm(rttm)
 
     for turn, _, speaker in diarization.itertracks(yield_label=True):
