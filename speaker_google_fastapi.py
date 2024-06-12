@@ -36,7 +36,8 @@ async def create_upload_file(file: UploadFile):
     output_folder = "file_segments\\" + org_filename + "_segments\\"    # 잘라낸 음성파일 새로 저장할 경로 -> file_segments/파일명_segments/
     seg_filepath = "file_segments\\" + org_filename + "_segments"    # 잘려진 음성파일이 저장된 경로 지정
     rttm_dirs = "rttm_dirs" # rttm 파일 저장할 새 디렉터리
-    speaker_dirs = "speaker_dirs" # rttm 파일 저장할 새 디렉터리
+    speaker_dirs = "speaker_dirs" # pickle 파일 저장할 새 디렉터리
+    text_dirs = "scripts_text"  # text 파일 저장용 디렉터리
 
     byte_file = await file.read()
     audio = io.BytesIO(byte_file)
@@ -47,6 +48,9 @@ async def create_upload_file(file: UploadFile):
 
     if not os.path.exists(speaker_dirs):   # rttm 디렉터리 생성
         os.makedirs(speaker_dirs)
+
+    if not os.path.exists(text_dirs):
+        os.makedirs(text_dirs)        
 
     # rttm_name =  org_filename + ".rttm"
     rttm_name = os.path.join(rttm_dirs, org_filename + ".rttm")
@@ -118,6 +122,13 @@ async def create_upload_file(file: UploadFile):
         #         print(text)
         #     print("====" * 10)
     speaker_dir_name = os.path.join(speaker_dirs, org_filename + "_dict.pickle")
+
+        # 화자별 텍스트 파일로 저장
+    for speaker_id, texts in speaker_texts.items():
+        speaker_text_file = os.path.join(text_dirs, f"{org_filename}_{speaker_id}.txt")
+        with open(speaker_text_file, "w", encoding="utf-8") as f:
+            for text in texts:
+                f.write(text + "\n")
 
     joblib.dump(speaker_texts, speaker_dir_name)
     print("time :", time.time() - start)

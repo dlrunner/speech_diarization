@@ -1,0 +1,35 @@
+{% block content %}
+    <form method="post" action="/filter">
+        <div>
+            {% for key, value in data.items() %}
+                <div class="task">
+                    <input type="checkbox" name="{{ key }}" id="{{ key }}" {% if value %} checked {% endif %}>
+                    <label for="{{ key }}">{{ key }}</label>
+                </div>
+            {% endfor %}
+        </div>
+        <button type="submit">선택 필터 적용</button>
+    </form>
+
+    {% if wav_files %}
+        <h2>다운로드 가능한 WAV 파일</h2>
+        <ul>
+            {% for key, file_link in wav_files.items() %}
+                <li>
+                    금현수 {{ key }}: <a href="{{ file_link }}">다운로드 WAV 파일</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    {% if txt_files %}
+        <h2>다운로드 가능한 TXT 파일</h2>
+        <ul>
+            {% for key, file_link in txt_files.items() %}
+                <li>
+                    박광희 {{ key }}: <a href="{{ file_link }}">다운로드 TXT 파일</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock content %}
