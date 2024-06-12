@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Request
 from fastapi.templating import Jinja2Templates
-from rec_audio import VoiceRecorder
+from audioRecognizer import VoiceRecognizer
 import signal
 import uvicorn
 
@@ -28,7 +28,7 @@ async def index(request:Request):
 async def recording(request:Request):
     
     #2.1 : rec_audio.py의 VoiceRecorder 클래스로 객체 생성
-    recorder = VoiceRecorder()
+    recorder = VoiceRecognizer()
     recorder.speak("안녕하세요. 2초 후에 '말씀하세요'")
     
     text = recorder.get_audio()
