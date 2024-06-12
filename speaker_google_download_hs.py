@@ -1,14 +1,14 @@
-from fastapi import FastAPI, Request, Form
+from fastapi import FastAPI, Request, Form, APIRouter
 from fastapi.templating import Jinja2Templates
-from fastapi.responses import HTMLResponse, FileResponse
+from fastapi.responses import HTMLResponse, FileResponse, JSONResponse
 import os
 import joblib
 from pydub import AudioSegment
 import glob
 
-app = FastAPI()
+router = APIRouter()
 templates = Jinja2Templates(directory="templates")
-org_filename = 'user001_1718171394'
+org_filename = 'user001_1718176705'
 combined_speaker_dir = 'filtered_speaker_audio'
 scripts_txt_dir = "scripts_text"
 def generate_wav_links(selected_speaker):
@@ -58,14 +58,14 @@ def generate_txt_links(selected_speaker):
 
     return txt_file_links
 
-@app.get("/", response_class=HTMLResponse)
-async def get_speaker(request: Request):
+@router.get("/", response_class=JSONResponse)
+async def get_speaker():
     print("main in")
     data = joblib.load('speaker_dirs\\'+org_filename+'_dict.pickle')
 
-    return templates.TemplateResponse("checkbox_hs.html", {"request": request, "data": data})
+    return JSONResponse(data)
 
-@app.post("/filter", response_class=HTMLResponse)
+@router.post("/filter", response_class=HTMLResponse)
 async def filter_speaker(request: Request):
     print("filter in")
     form_data = await request.form()
@@ -76,7 +76,7 @@ async def filter_speaker(request: Request):
     print('wav_links:',txt_links)
     return templates.TemplateResponse("checkbox_hs.html", {"request": request, "data": selected_speaker, "wav_files": wav_links, "txt_files": txt_links})
 
-@app.get("/filtered_speaker_audio/{file_name}", response_class=FileResponse)
+@router.get("/filtered_speaker_audio/{file_name}", response_class=FileResponse)
 async def download_wav_file(file_name: str):
     file_path = os.path.join(combined_speaker_dir, file_name)
     print('download_file_path:',file_path)
@@ -84,7 +84,7 @@ async def download_wav_file(file_name: str):
     # file_path = os.path.join(combined_speaker_dir, file_name)
     return FileResponse(file_path, filename=file_name, media_type='audio/wav')
 
-@app.get("/scripts_text/{file_name}", response_class=FileResponse)
+@router.get("/scripts_text/{file_name}", response_class=FileResponse)
 async def download_txt_file(file_name: str):
     file_path = os.path.join(scripts_txt_dir, file_name)
     print('download_file_path:',file_path)
