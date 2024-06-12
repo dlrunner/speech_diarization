@@ -15,7 +15,6 @@ class VoiceRecognizer:
         self.mic          = sr.Microphone(device_index)
         self.recordYn     = False
         self.allFrames    = []
-        #self.frames       = []
         self.recordThread = None
         self.recordStart  = None
         self.recordEnd    = None
@@ -38,27 +37,26 @@ class VoiceRecognizer:
         self.recordThread.start()                                           # 녹음 스레드 시작
 
     def process_audio(self):
+        print("process_audio 메소드 시작")
         while not self.recordThread.queue.empty():
-            print("데이터 있다")
+            print("queue 데이터 있음.")
             audio_data = self.recordThread.queue.get()
             if audio_data:
-                print("가져오니?")
-                self.allFrames.append(audio_data)
+                self.allFrames.append(audio_data.get_wav_data())
 
     def save_audio(self, filename='recordOutput.wav'):
-        print('녹음을 종료합니다.')
-        #self.recordThread.stop()                                            # 녹음 스레드 중지
-        #print('stop')
-        #self.recordThread.join()                                            # 녹음 스레드 종료를 기다림
-        #print('join')
-        #self.allFrames.append(self.recordThread.queue.get().get_wav_data())
+        print('save_audio 메소드 실행, 파일 저장 프로세스')
+        self.recordThread.stop()  # 녹음 스레드 중지
+        self.recordThread.join()  # 녹음 스레드 종료를 기다림
         self.process_audio()
-        print('오디오 파일로 저장완료')
+        
+        print('오디오 파일로 저장준비')
         with wave.open(filename, 'wb') as wf:                               # 'wb'는 바이너리 쓰기 모드로 열라는 뜻. 
             wf.setnchannels(1)                                              # 단일 채널
             wf.setsampwidth(2)                                              # 16-bit 샘플링
             wf.setframerate(44100)                                          # 44.1kHz 샘플링 속도 (일반적인 CD 품질)
             wf.writeframes(b''.join(self.allFrames))                        # wf.writeframes(b''.join(self.frames))
+            print('오디오 파일로 저장완료')
 
     def stop(self):
             print("녹음 중지...")
@@ -102,7 +100,7 @@ class VoiceRecognizer:
                         self.save_audio()
                         self.recordEnd = time.time() - self.recordStart
                         print("recording time :", self.recordEnd)                 #콘솔에 녹음시간 출력.
-                        print('음성녹음이 종료되었습니다.')
+                        print('쓰레드 종료')
                         self.stop()
                         excute = False                                            #while문 종료.
 
