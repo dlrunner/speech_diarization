@@ -16,7 +16,7 @@ const App = () => {
         formData.append('file', file);
 
         try {
-            const response = await fetch('http://localhost:8000/uploadfile/', {
+            const response = await fetch('http://localhost:8000/api/uploadfile/', {
                 method: 'POST',
                 body: formData,
             });
@@ -25,7 +25,7 @@ const App = () => {
         } catch (error) {
             console.error('Error:', error);
         } finally {
-          setIsLoding(false);
+          setIsLoding(false); // 로딩 종료
         }
     };
 
@@ -38,7 +38,7 @@ const App = () => {
             </button>
             {speakerTexts && (
                 <div>
-                    <h2>Speaker Texts</h2>
+                    <h2>화자 분리결과</h2>
                     {Object.keys(speakerTexts).map((speakerId) => (
                         <div key={speakerId}>
                             <h3>Speaker {speakerId}</h3>
