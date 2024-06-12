@@ -5,6 +5,7 @@ import io
 from pydub import AudioSegment
 import os
 import speech_recognition as sr
+import joblib
 
 pipeline = Pipeline.from_pretrained(
   "pyannote/speaker-diarization-3.1",
@@ -27,6 +28,7 @@ async def create_upload_file(file: UploadFile):
     output_folder = "file_segments\\" + org_filename + "_segments\\"    # 잘라낸 음성파일 새로 저장할 경로 -> file_segments/파일명_segments/
     seg_filepath = "file_segments\\" + org_filename + "_segments"    # 잘려진 음성파일이 저장된 경로 지정
     rttm_dirs = "rttm_dirs" # rttm 파일 저장할 새 디렉터리
+    speaker_dirs = "speaker_dirs" # rttm 파일 저장할 새 디렉터리
 
     byte_file = await file.read()
     audio = io.BytesIO(byte_file)
@@ -34,6 +36,9 @@ async def create_upload_file(file: UploadFile):
 
     if not os.path.exists(rttm_dirs):   # rttm 디렉터리 생성
         os.makedirs(rttm_dirs)
+
+    if not os.path.exists(speaker_dirs):   # rttm 디렉터리 생성
+        os.makedirs(speaker_dirs)
 
     # rttm_name =  org_filename + ".rttm"
     rttm_name = os.path.join(rttm_dirs, org_filename + ".rttm")
@@ -104,6 +109,8 @@ async def create_upload_file(file: UploadFile):
         #     for text in texts:
         #         print(text)
         #     print("====" * 10)
+    speaker_dir_name = os.path.join(speaker_dirs, org_filename + "_dict.pickle")
 
-
+    joblib.dump(speaker_texts, speaker_dir_name)
     print("time :", time.time() - start)
+    return speaker_texts

@@ -37,7 +37,7 @@ stream = p.open(format=FORMAT,
 #안내 음성 출력을 위한 메소드
 def speak(text):
     tts = gTTS(text=text, lang='ko')
-    filename='voice.mp3'
+    filename='voice'+str(round(time.time()))+'.mp3'
     tts.save(filename)                  #안내 방송해줄 음성 파일 생성.
     playsound.playsound(filename)       #위에서 생성한 음성 파일을 실행.
     os.remove(filename)                 #해당 부분이 없으면, 퍼미션 에러 발생. 이후에 파일 생성 시 문제가 되는 듯.
