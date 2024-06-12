@@ -14,17 +14,23 @@ pipeline = Pipeline.from_pretrained(
 silence_duration = 1000
 some_silence = AudioSegment.silent(duration=silence_duration) 
 
-user = 'user001' # 유저 이름
-org_filename = user + '_' + str(round(time.time())) # 유저 이름에 타임스탬프 추가
-org_filepath = "source\\" + org_filename  # 변수에 담은 파일명에 경로추가 -> 경로/파일명
-output_folder = "file_segments\\" + org_filename + "_segments\\"    # 잘라낸 음성파일 새로 저장할 경로 -> file_segments/파일명_segments/
-seg_filepath = "file_segments\\" + org_filename + "_segments"    # 잘려진 음성파일이 저장된 경로 지정
+# user = 'user002'  # 유저 이름
+# org_filename = f"{user}_{round(time.time())}"  # 유저 이름에 타임스탬프 추가
+# org_filepath = os.path.join("source", org_filename)  # 변수에 담은 파일명에 경로추가 -> 경로/파일명
+# output_folder = os.path.join("file_segments", f"{org_filename}_segments")  # 잘라낸 음성파일 새로 저장할 경로
+# seg_filepath = output_folder  # 잘려진 음성파일이 저장된 경로 지정
 
 r = sr.Recognizer()
 
 app = FastAPI()
 @app.post("/uploadfile/")
 async def create_upload_file(file: UploadFile):
+    user = 'user001' # 유저 이름
+    org_filename = user + '_' + str(round(time.time())) # 유저 이름에 타임스탬프 추가
+    # org_filepath = "source\\" + org_filename  # 변수에 담은 파일명에 경로추가 -> 경로/파일명
+    output_folder = "file_segments\\" + org_filename + "_segments\\"    # 잘라낸 음성파일 새로 저장할 경로 -> file_segments/파일명_segments/
+    seg_filepath = "file_segments\\" + org_filename + "_segments"    # 잘려진 음성파일이 저장된 경로 지정
+
     byte_file = await file.read()
     audio = io.BytesIO(byte_file)
     diarization = pipeline(audio)
@@ -41,10 +47,13 @@ async def create_upload_file(file: UploadFile):
     with open(rttm_name) as f:
             lines = f.readlines()
 
+    audio.seek(0)
+    audio_segment = AudioSegment.from_file(audio, format="wav")
+
     for line in lines:
         line = line.replace('\r','').replace('\n','')
         line_arr = line.split(' ')
-        
+
         #create variables we will need
         seg_start = int(line_arr[3].replace('.',''))
         seg_duration = int(line_arr[4].replace('.',''))
@@ -52,9 +61,7 @@ async def create_upload_file(file: UploadFile):
         seg_end = seg_start + seg_duration
         audio_segment_file_name = output_folder + seg_speaker + "_" + str(seg_start) + ".wav"
 
-        t1 = float(line_arr[3])
-        t2 = float(line_arr[3]) + float(line_arr[4])
-        audio2 = audio[t1*1000 : t2*1000]
+        audio2 = audio_segment[seg_start:seg_end]
         audio2.export(audio_segment_file_name, format="wav")
 
         # 화자별 텍스트 저장을 위한 딕셔너리 초기화
@@ -91,11 +98,11 @@ async def create_upload_file(file: UploadFile):
                 print("----" * 10)
 
         # 화자별 텍스트 출력
-        for speaker_id, texts in speaker_texts.items():
-            print(f"화자 {speaker_id}의 전체 텍스트:")
-            for text in texts:
-                print(text)
-            print("====" * 10)
+        # for speaker_id, texts in speaker_texts.items():
+        #     print(f"화자 {speaker_id}의 전체 텍스트:")
+        #     for text in texts:
+        #         print(text)
+        #     print("====" * 10)
 
 
     print("time :", time.time() - start)
