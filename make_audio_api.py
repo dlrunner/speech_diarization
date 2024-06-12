@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Request
 from fastapi.templating import Jinja2Templates
+from fastapi.middleware.cors import CORSMiddleware
 #from audioRecognizer import VoiceRecognizer
 from VoiceRecognizer import VoiceRecognizer
 import signal
@@ -16,6 +17,16 @@ signal.signal(signal.SIGINT, handle_exit)
 signal.signal(signal.SIGTERM, handle_exit)
 
 app = FastAPI()
+
+# CORS 미들웨어 추가
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],  # 클라이언트의 주소를 여기에 추가
+    allow_credentials=True,
+    allow_methods=["GET", "POST"],
+    allow_headers=["*"],
+)
+
 # FastApi 애플리케이션에서 Jinja2 템플릿 엔진을 사용하도록 설정
 templates = Jinja2Templates(directory="templates")
 
