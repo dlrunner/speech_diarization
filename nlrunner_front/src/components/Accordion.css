@@ -1,25 +1,64 @@
+/* 기본 스타일 */
 .accordion {
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    margin: 10px 0;
-    overflow: hidden;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin: 10px 0;
+  overflow: hidden;
+  transition: box-shadow 0.3s;
+}
+
+.accordion:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 헤더 스타일 */
+.accordion-header {
+  background-color: #fff; /* 보라색 */
+  color: #000000;
+  padding: 15px 20px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background-color 0.3s;
+  border-radius: 42px;
+  box-shadow: 0 4px 8px #dacaf5;
+}
+
+.accordion-header:hover {
+  background-color: #d2bcff; /* 연보라색 */
+}
+
+/* 헤더 제목 스타일 */
+.accordion-header h3 {
+  margin: 0;
+  font-size: 1.25em;
+}
+
+/* 내용 스타일 */
+.accordion-content {
+  padding: 15px 20px;
+  border-top: 1px solid #ccc;
+  background-color: #e7d9ff; /* 연한 보라색 */
+  animation: fadeIn 0.3s;
+}
+
+/* 아이콘 스타일 */
+.accordion-header span {
+  font-size: 1.5em;
+  transition: transform 0.3s;
+}
+
+.accordion-header span.open {
+  transform: rotate(180deg);
+}
+
+/* 애니메이션 효과 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
   }
-  
-  .accordion-header {
-    background-color: #f7f7f7;
-    padding: 10px;
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  to {
+    opacity: 1;
   }
-  
-  .accordion-header h3 {
-    margin: 0;
-  }
-  
-  .accordion-content {
-    padding: 10px;
-    border-top: 1px solid #ccc;
-  }
-  
+}
