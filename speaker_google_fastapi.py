@@ -128,7 +128,7 @@ async def create_upload_file(file: UploadFile):
 
     print("for문 밖 : " , selected_speaker)
     # 텍스트 다운로드 인스턴스 생성
-    text_download_link  = TextDownlaod(selected_speaker, scripts_txt_dir, org_filename)      
+    text_download_link  = TextDownlaod(selected_speaker, speaker_scripts_dir, org_filename)      
     text_download_links = text_download_link.generate_txt_links()      
     print("text_download_links :", text_download_links)
 
