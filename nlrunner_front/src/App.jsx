@@ -32,6 +32,7 @@ const App = () => {
                 body: formData,
             });
             const data = await response.json();
+            // console.log('API Response : ', data);
             setSpeakerTexts(data.speaker_texts);
             setTextDownloadLinks(data.text_download_links);
             setDuration(data.duration.toFixed(1));

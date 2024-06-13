@@ -7,7 +7,7 @@ import os
 import speech_recognition as sr
 import joblib
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, FileResponse
 from text_download import TextDownlaod
 
 pipeline = Pipeline.from_pretrained(
@@ -128,7 +128,7 @@ async def create_upload_file(file: UploadFile):
 
     print("for문 밖 : " , selected_speaker)
     # 텍스트 다운로드 인스턴스 생성
-    text_download_link  = TextDownlaod(selected_speaker, speaker_scripts_dir, org_filename)      
+    text_download_link  = TextDownlaod(selected_speaker, speaker_scripts_dir, upload_filename)      
     text_download_links = text_download_link.generate_txt_links()      
     print("text_download_links :", text_download_links)
 
