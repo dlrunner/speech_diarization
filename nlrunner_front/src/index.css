@@ -25,10 +25,14 @@ a:hover {
 body {
   margin: 0;
   display: flex;
-  place-items: center;
+  justify-content: center;
+  /* align-items: center; */
+  flex-direction: column; /* 중앙 정렬을 위해 flex-direction을 column으로 설정 */
   min-width: 320px;
-  min-height: 100vh;
+  /* padding: 1rem; 반응형 패딩 추가 */
+  box-sizing: border-box;
 }
+
 
 h1 {
   font-size: 3.2em;
