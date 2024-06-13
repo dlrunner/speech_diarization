@@ -1,128 +1,193 @@
 .image-section {
-  display: flex;
-  flex-direction: column;
-  /* align-items: center;  */
-  /* 'start'에서 'center'로 변경하여 중앙 정렬 */
-  background-color: rgba(56, 56, 56, 0.8);
-  padding: 2rem 1rem; /* 패딩을 조정하여 반응형으로 대응 */
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.image-container {
-  display: flex;
-  width: 100%;
-  justify-content: center;
-}
-
-.main-image {
-  width: 100%;
-  max-width: 600px; /* 최대 너비 유지 */
-  height: auto;
-}
-
-.upload-section {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-color: #eee;
-  padding: 2rem 1rem; /* 패딩을 조정하여 반응형으로 대응 */
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.upload-container {
-  width: 100%;
-  max-width: 800px;
-}
-
-.upload-title {
-  color: #000;
-  font: 700 2rem/1.08 Pretendard Variable, -apple-system, Roboto, Helvetica, sans-serif;
-  text-align: center;
-}
-
-.upload-form {
-  display: flex;
-  flex-direction: column;
-  margin-top: 1rem;
-  width: 100%;
-  gap: 1rem;
-  font-size: 1.5rem;
-  font-weight: 500;
-  line-height: 1.33;
-  max-width: 100%;
-}
-
-.file-select-button {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 32px;
-  box-shadow: 5px 5px 10px rgba(170, 170, 204, 0.25), 10px 10px 20px rgba(170, 170, 204, 0.5);
-  background-color: #7030c1;
-  color: #fff;
-  text-align: center;
-  padding: 14px 1rem; /* 패딩 조정 */
-  font-family: Pretendard Variable, -apple-system, Roboto, Helvetica, sans-serif;
-}
-
-.file-info {
-  display: flex;
-  flex-direction: column;
-  font-size: 1.25rem;
-  color: #7878ab;
-  font-weight: 400;
-  line-height: 2;
-  justify-content: center;
-}
-
-.file-upload {
-  display: flex;
-  align-items: center; /* 'start'에서 'center'로 변경 */
-  border-radius: 40px;
-  box-shadow: -2px -2px 4px rgba(255, 255, 255, 0.5) inset,
-    2px 2px 4px rgba(170, 170, 204, 0.25) inset,
-    5px 5px 10px rgba(170, 170, 204, 0.5) inset;
-  background-color: #f5f5fa;
-  justify-content: center;
-  padding: 1rem;
-}
-
-.file-upload-button {
-  display: flex;
-  align-items: center;
-  border-radius: 32px;
-  box-shadow: 5px 5px 10px rgba(170, 170, 204, 0.25), 10px 10px 20px rgba(170, 170, 204, 0.5);
-  background-color: #f5f5fa;
-  padding: 0.5rem 1rem;
-  color: #000;
-}
-
-.upload-icon {
-  aspect-ratio: 0.67;
-  object-fit: cover;
-  object-position: center;
-  width: 20px;
-}
-
-@media (max-width: 991px) {
-  .image-section {
-    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    /* align-items: center;  */
+    /* 'start'에서 'center'로 변경하여 중앙 정렬 */
+    background-color: rgba(56, 56, 56, 0.8);
+    padding: 2rem 1rem; /* 패딩을 조정하여 반응형으로 대응 */
+    width: 100%;
+    box-sizing: border-box;
   }
+  
+  .image-container {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .main-image {
+    width: 100%;
+    max-width: 600px; /* 최대 너비 유지 */
+    height: auto;
+  }
+  
   .upload-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #eee;
+    padding: 2rem 1rem; /* 패딩을 조정하여 반응형으로 대응 */
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .upload-container {
+    width: 100%;
+    max-width: 800px;
+  }
+  
+  .upload-title {
+    color: #000;
+    font: 700 2rem/1.08 Pretendard Variable, -apple-system, Roboto, Helvetica, sans-serif;
+    text-align: center;
+  }
+  
+  .upload-form {
+    display: flex;
+    flex-direction: column;
+    margin-top: 1rem;
+    width: 100%;
+    gap: 1rem;
+    font-size: 1.5rem;
+    font-weight: 500;
+    line-height: 1.33;
+    max-width: 100%;
+  }
+  
+  .file-select-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 32px;
+    box-shadow: 5px 5px 10px rgba(170, 170, 204, 0.25), 10px 10px 20px rgba(170, 170, 204, 0.5);
+    background-color: #7030c1;
+    color: #fff;
+    text-align: center;
+    padding: 14px 1rem; /* 패딩 조정 */
+    font-family: Pretendard Variable, -apple-system, Roboto, Helvetica, sans-serif;
+  }
+  
+  .file-info {
+    display: flex;
+    flex-direction: column;
+    font-size: 1.25rem;
+    color: #7878ab;
+    font-weight: 400;
+    line-height: 2;
+    justify-content: center;
+  }
+  
+  .file-upload {
+    display: flex;
+    align-items: center; /* 'start'에서 'center'로 변경 */
+    border-radius: 40px;
+    box-shadow: -2px -2px 4px rgba(255, 255, 255, 0.5) inset,
+      2px 2px 4px rgba(170, 170, 204, 0.25) inset,
+      5px 5px 10px rgba(170, 170, 204, 0.5) inset;
+    background-color: #f5f5fa;
+    justify-content: center;
     padding: 1rem;
   }
-  .upload-form {
-    margin-top: 1rem;
-  }
-  .file-select-button {
-    padding: 0.5rem;
-  }
-  .file-upload {
-    padding: 0.5rem;
-  }
+  
   .file-upload-button {
-    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    border-radius: 32px;
+    box-shadow: 5px 5px 10px rgba(170, 170, 204, 0.25), 10px 10px 20px rgba(170, 170, 204, 0.5);
+    background-color: #f5f5fa;
+    padding: 0.5rem 1rem;
+    color: #000;
   }
-}
+  
+  .upload-icon {
+    aspect-ratio: 0.67;
+    object-fit: cover;
+    object-position: center;
+    width: 20px;
+  }
+  
+  .results-container {
+    margin-top: 2rem;
+    background-color: #fff;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .results-container h2 {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 1rem;
+  }
+  
+  .results-container h3 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #555;
+    margin-bottom: 0.5rem;
+  }
+  
+  .results-container ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .results-container li {
+    font-size: 1.25rem;
+    color: #777;
+    margin-bottom: 0.5rem;
+  }
+  
+  .download-container {
+    margin-top: 2rem;
+    background-color: #fff;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .download-container h2 {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 1rem;
+  }
+  
+  .download-container ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .download-container li {
+    font-size: 1.25rem;
+    color: #777;
+    margin-bottom: 0.5rem;
+  }
+  
+  .download-container button {
+    background-color: #7030c1;
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  
+  .download-container button:hover {
+    background-color: #5a258c;
+  }
+  
+  @media (max-width: 991px) {
+    .image-section,
+    .upload-section {
+      padding: 1rem;
+    }
+  
+    .file-select-button,
+    .file-upload,
+    .file-upload-button {
+      padding: 0.5rem;
+    }
+  }
+  
