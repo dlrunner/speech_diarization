@@ -1,0 +1,48 @@
+/* Header.css */
+.header {
+  background-color: #f8f9fa; /* 밝은 회색 배경색 */
+  padding: 1rem 2rem;
+  border-bottom: 2px solid #e0e0e0;
+  display: flex;
+  justify-content: center;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1200px; /* 원하는 최대 너비 설정 */
+}
+
+.logo {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #ff0077; /* 로고 색상 */
+}
+
+.nav ul {
+  list-style-type: none;
+  padding: 0;
+  display: flex; /* 가로로 나열 */
+  margin: 0; /* 기본 여백 제거 */
+}
+
+.nav li {
+  margin-right: 1.5rem;
+}
+
+.nav li:last-child {
+  margin-right: 0; /* 마지막 항목의 오른쪽 여백 제거 */
+}
+
+.nav a {
+  text-decoration: none;
+  color: #333;
+  font-size: 1rem;
+  transition: color 0.3s;
+}
+
+.nav a:hover {
+  color: #007bff; /* 링크 호버 색상 */
+}
