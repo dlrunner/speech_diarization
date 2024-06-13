@@ -10,6 +10,7 @@ const App2 = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [duration, setDuration] = useState(null); // 소요시간 표시용
     const [fileName, setFileName] = useState(null);
+    const [message, setMessage] = useState('');
 
     const handleFileChange = (event) => {
         const file = event.target.files[0];
@@ -126,35 +127,49 @@ const App2 = () => {
                 {/* 화자 분리 결과 및 다운로드 링크 표시 */}
                 {speakerTexts && (
                     <div className="results-container">
-                        <h2>화자 분리 결과</h2>
-                        <h4>소요시간 : {duration}초</h4>
-                        {Object.entries(speakerTexts).map(([speakerId, texts]) => (
-                            <div key={speakerId}>
-                                <h3>Speaker {speakerId}</h3>
-                                <ul>
-                                    {texts.map((text, index) => (
-                                        <li key={index}>{text}</li>
-                                    ))}
-                                </ul>
-                            </div>
-                        ))}
-                    </div>
-                )}
-                {textDownloadLinks && (
-                    <div className="download-container">
-                        <h2>다운로드 가능한 TXT 파일</h2>
-                        <ul>
-                            {Object.entries(textDownloadLinks).map(([speakerId, fileLink]) => (
-                                <li key={speakerId}>
-                                    Speaker {speakerId}:{' '}
-                                    <button onClick={() => downloadFile(speakerId)}>다운로드 TXT 파일</button>
-                                </li>
-                            ))}
-                        </ul>
+                        <div className="results-header">화자 분리 결과</div>
+                        <div className="results-bullet">•</div>
+                        <div className="results-bullet dimmed">•</div>
+                        <div className="results-bullet highlight">•</div>
+                        <div className="results-duration">소요 시간: {duration}초</div>
+                        <div className='results-container'>
+                            <div className="speaker-results">
+                                {Object.entries(speakerTexts).map(([speakerId, texts]) => (
+                                    <div className="speaker" key={speakerId}>
+                                        <div className="speaker-header">
+                                            <div className="div-9">
+                                                <div className="speaker-id">SPEAKER {speakerId}</div>
+                                                <img
+                                                    loading="lazy"
+                                                    src={`https://cdn.builder.io/api/v1/image/assets/TEMP/c8721954f6fdea1ecb1c144ac2e72c27ac31bb67260fa3cd2358f3686425e23a?apiKey=9fb55b04424d4563a105428acb43ab19&`}
+                                                    alt="speaker"
+                                                />
+                                                </div>
+                                        </div>
+                                        <div className="speaker-divider"></div>
+                                        <div className="speaker-text">
+                                            {texts.map((text, index) => (
+                                                <div key={`bullet-${index}`}>
+                                                    <div className="bullet">•</div>
+                                                    <div className="text">{text}</div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                        {textDownloadLinks && textDownloadLinks[speakerId] && (
+                        <button onClick={() => downloadFile(speakerId)}>Speaker{speakerId}.txt</button>)}
+
+                                    </div>
+                                    
+                                
+                            )
+                            )}
+                        </div>
+                        </div>
                     </div>
                 )}
             </section>
         </>
+
     );
 };
 
