@@ -1,7 +1,8 @@
+# fastAPI로 http://127.0.0.1:8000/recording 호출 시 실행되는 파이썬 모듈
+# 설치 명령어 : pip install SpeechRecognition
 import speech_recognition as sr 
 import pyaudio
 import wave
-import time
 import os
 from gtts import gTTS
 import playsound
@@ -9,6 +10,7 @@ import threading
 
 class VoiceRecognizer:
 
+    # VoiceRecognizer 클래스의 생성자
     def __init__(self, device_index=1, chunk_size=1024, channels=1, rate=44100, format=pyaudio.paInt16):
         self.device_index = device_index
         self.chunk_size = chunk_size
@@ -18,6 +20,7 @@ class VoiceRecognizer:
         self.frames = []
         self.recording = False
 
+    # 안내음성 생성 및 음성 출력.
     def speak(self, text):
         tts = gTTS(text=text, lang='ko')
         filename = 'announcement.mp3'
@@ -26,7 +29,7 @@ class VoiceRecognizer:
         os.remove(filename)
 
     def record_audio(self):
-        self.speak("음성 녹음을 시작합니다.")
+        self.speak("AI : 음성 녹음을 시작합니다.")
         self.recording = True
         self.frames = []
         self.thread = threading.Thread(target=self._record)
