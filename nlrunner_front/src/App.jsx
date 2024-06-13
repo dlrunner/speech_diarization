@@ -1,5 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
+import logo from './logo.svg';
 import './App.css'
+import RecordingComponent from './RecordingComponent.jsx'; // 녹음 컴포넌트 임포트
 
 const App = () => {
     const [file, setFile] = useState(null);
@@ -8,6 +10,7 @@ const App = () => {
     const [isLoading, setIsLoding] = useState(false);
     const [duration, setDuration] = useState(null); //소요시간 표시용
     const [fileName, setFileName] = useState(null);
+    const [isRecording, setIsRecording] = useState(false); // 녹음 상태 추가
 
     const handleFileChange = (event) => {
         setFile(event.target.files[0]);
@@ -39,7 +42,9 @@ const App = () => {
           setIsLoding(false); // 로딩 종료
         }
     };
-
+    const handleRecordingClick = () => {
+        setIsRecording(true); // 녹음 상태로 전환
+      };
     const downloadFile = async (fileLink) => {
         try {
             const response = await fetch(fileLink);
@@ -59,46 +64,48 @@ const App = () => {
 
     return (
         <div>
-            <h1>목소리필터 서비스</h1>
-            <input type="file" accept='.wav' onChange={handleFileChange} />
-            <button onClick={handleSubmit} disabled={!file}>
-            {isLoading ? '로딩 중...잠시만 기다려주세요!' : '업로드'}
-            </button>
-            {speakerTexts && (
+          {isRecording ? (
+            <RecordingComponent /> // 녹음 컴포넌트 렌더링
+          ) : (
+            <>
+              <h1>목소리필터 서비스</h1>
+              <button onClick={handleRecordingClick}>녹음</button>
+              <input type="file" accept='.wav' onChange={handleFileChange} />
+              <button onClick={handleSubmit} disabled={!file}>
+                {isLoading ? '로딩 중...잠시만 기다려주세요!' : '업로드'}
+              </button>
+              {speakerTexts && (
                 <div>
-                    <h2>화자 분리 결과</h2>
-                    <h4>소요시간 : {duration}초</h4>
-                    {Object.entries(speakerTexts).map(([speakerId, texts]) => (
-                        <div key={speakerId}>
-                            <h3>Speaker {speakerId}</h3>
-                            <ul>
-                                {texts.map((text, index) => (
-                                    <li key={index}>{text}</li>
-                                ))}
-                            </ul>
-                        </div>
-                    ))}
+                  <h2>화자 분리 결과</h2>
+                  <h4>소요시간 : {duration}초</h4>
+                  {Object.entries(speakerTexts).map(([speakerId, texts]) => (
+                    <div key={speakerId}>
+                      <h3>Speaker {speakerId}</h3>
+                      <ul>
+                        {texts.map((text, index) => (
+                          <li key={index}>{text}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
                 </div>
-            )}
-            {textDownloadLinks && (
+              )}
+              {textDownloadLinks && (
                 <div>
-                    <h2>다운로드 가능한 TXT 파일</h2>
-                    <ul>
-                    {/* {Object.entries(textDownloadLinks).map(([speakerId, fileLink]) => (
-                        <li key={speakerId}>
-                            Speaker {speakerId}: <a href={fileLink} download>다운로드 TXT 파일</a>
-                        </li>
-                    ))} */}
+                  <h2>다운로드 가능한 TXT 파일</h2>
+                  <ul>
                     {Object.entries(textDownloadLinks).map(([speakerId, fileLink]) => (
-                            <li key={speakerId}>
-                                Speaker {speakerId}: <button onClick={() => downloadFile(fileLink)}>다운로드 TXT 파일</button>
-                            </li>
+                      <li key={speakerId}>
+                        Speaker {speakerId}: <button onClick={() => downloadFile(fileLink)}>다운로드 TXT 파일</button>
+                      </li>
                     ))}
-                    </ul>
+                  </ul>
                 </div>
-            )}
+              )}
+            </>
+          )}
         </div>
-    );
-};
+      );
+    };
 
 export default App;
