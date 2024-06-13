@@ -61,23 +61,26 @@ async def get_speaker():
 
     return JSONResponse(data)
 
-@router.post("/filter", response_class=HTMLResponse)
+@router.post("/filter", response_class=JSONResponse)
 async def filter_speaker(request: Request):
     print("filter in")
-    form_data = await request.form()
+    form_data = await request.json()
     selected_speaker = {key: True for key in form_data.keys()}
     wav_links = generate_wav_links(selected_speaker)
     txt_links = generate_txt_links(selected_speaker)
     print('wav_links : ',wav_links)
     print('wav_links : ',txt_links)
-    return templates.TemplateResponse("checkbox_hs.html", {"request": request, "data": selected_speaker, "wav_files": wav_links, "txt_files": txt_links})
+    return JSONResponse(content={"wav_files": wav_links, "txt_files": txt_links})
 
-@router.get("/filtered_speaker_audio/{file_name}", response_class=FileResponse)
+
+@router.get("/filtere d_speaker_audio/{file_name}", response_class=FileResponse)
 async def download_wav_file(file_name: str):
     file_path = os.path.join(combined_speaker_dir, file_name)
     print('download_file_path:',file_path)
 
     return FileResponse(file_path, filename=file_name, media_type='audio/wav')
+
+
 
 @router.get("/scripts_text/{file_name}", response_class=FileResponse)
 async def download_txt_file(file_name: str):

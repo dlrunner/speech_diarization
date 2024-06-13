@@ -2,14 +2,16 @@ import React, { useState } from 'react'
 import './App.css'
 
 const App = () => {
-    const [file, setFile] = useState(null);
-    const [speakerTexts, setSpeakerTexts] = useState(null);
-    const [isLoading, setIsLoding] = useState(false);
+    const [file, setFile] = useState(null); //선택한 파일
+    const [speakerTexts, setSpeakerTexts] = useState(null);  // 화자분리 결과
+    const [isLoading, setIsLoding] = useState(false); // 로딩 상태
 
+    //파일 선택시 실행되는 함수
     const handleFileChange = (event) => {
         setFile(event.target.files[0]);
     };
 
+    //업로드 할때 실행되는 함수
     const handleSubmit = async () => {
         setIsLoding(true); //로딩 시작
         const formData = new FormData();
@@ -21,7 +23,7 @@ const App = () => {
                 body: formData,
             });
             const data = await response.json();
-            setSpeakerTexts(data);
+            setSpeakerTexts(data); //서버에서 받은 화자 분리 결과를 setSpeakerTexts에 담는다.
         } catch (error) {
             console.error('Error:', error);
         } finally {
