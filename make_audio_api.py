@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, APIRouter
 from fastapi.templating import Jinja2Templates
 #from audioRecognizer import VoiceRecognizer
 from VoiceRecognizer import VoiceRecognizer
@@ -15,17 +15,21 @@ def handle_exit(sig, frame):
 signal.signal(signal.SIGINT, handle_exit)
 signal.signal(signal.SIGTERM, handle_exit)
 
-app = FastAPI()
+#app = FastAPI()
+router = APIRouter()
+
 # FastApi 애플리케이션에서 Jinja2 템플릿 엔진을 사용하도록 설정
 templates = Jinja2Templates(directory="templates")
 
 # TEST CASE 1 : 웹 브라우저에서 http://127.0.0.1:8000/index 를 호출하고, 프로그램 실행 버튼을 클릭한다.
-@app.get("/index")
+#@app.get("/index")
+@router.post("/voice/")
 async def index(request:Request):
     return  templates.TemplateResponse("index.html", {"request":request})
 
 # TEST CASE 2 : TEST CASE 1에서 프로그램 실행 버튼을 클릭하면, 해당 URL을 호출되기 때문에 사용자가 해야할 일 없음.
-@app.post("/recording")
+#@app.post("/recording")
+@router.post("/recording/")
 async def recording(request:Request):
     
     #2.1 : rec_audio.py의 VoiceRecorder 클래스로 객체 생성
@@ -38,5 +42,5 @@ async def recording(request:Request):
     
     return {"status": "recording completed", "text": text}
 
-if __name__ == "__main__":
-    uvicorn.run("mk_audio_api:app", host="127.0.0.1", port=8000)
+#if __name__ == "__main__":
+#    uvicorn.run("mk_audio_api:app", host="127.0.0.1", port=8000)
