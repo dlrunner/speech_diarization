@@ -17,11 +17,6 @@ const App = () => {
     };
 
     const handleSubmit = async () => {
-        if (!file) {
-            alert('파일을 확인해주세요.');
-            return;
-        }
-
         setIsLoding(true); //로딩 시작
         const formData = new FormData();
         formData.append('file', file);
@@ -46,21 +41,34 @@ const App = () => {
     const handleRecordingClick = () => {
         setIsRecording(true); // 녹음 상태로 전환
       };
-    const downloadFile = async (fileLink) => {
-        try {
-            const response = await fetch(fileLink);
-            const text = await response.text();
-            const blob = new Blob([text], { type: 'text/plain' });
-            const url = window.URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download', 'filename.txt');
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        } catch (error) {
-            console.error('Error:', error);
+    // const downloadFile = async (fileLink) => {
+    //     try {
+    //         const response = await fetch(fileLink);
+    //         const text = await response.text();
+    //         const blob = new Blob([text], { type: 'text/plain' });
+    //         const url = window.URL.createObjectURL(blob);
+    //         const link = document.createElement('a');
+    //         link.href = url;
+    //         link.setAttribute('download', 'filename.txt');
+    //         document.body.appendChild(link);
+    //         link.click();
+    //         document.body.removeChild(link);
+    //     } catch (error) {
+    //         console.error('Error:', error);
+    //     }
+    // };
+    const downloadFile = async (speakerId) => {
+        const downloadData = {
+            filename: fileName,
+            speaker_id: speakerId
         }
+        const download = await fetch('http://localhost:8000/api/download_txt/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(downloadData),
+        });
     };
 
     return (
@@ -95,10 +103,11 @@ const App = () => {
                 <div>
                   <h2>다운로드 가능한 TXT 파일</h2>
                   <ul>
-                    {Object.entries(textDownloadLinks).map(([speakerId, fileLink]) => (
-                      <li key={speakerId}>
-                        Speaker {speakerId}: <button onClick={() => downloadFile(fileLink)}>다운로드 TXT 파일</button>
-                      </li>
+                    {Object.entries(textDownloadLinks).map(([speakerId, fileLink]) => (                      
+                        <li key={speakerId}>
+                            {/* Speaker {speakerId}: <button onClick={() => downloadFile(fileLink)}>다운로드 TXT 파일</button> */}
+                            Speaker {speakerId}: <button onClick={() => downloadFile(speakerId)}>다운로드 TXT 파일</button>
+                        </li>
                     ))}
                   </ul>
                 </div>

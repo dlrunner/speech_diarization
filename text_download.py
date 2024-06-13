@@ -1,6 +1,9 @@
 import glob
 import os
-from fastapi import APIRouter, File, UploadFile
+from fastapi import APIRouter, Request
+from fastapi.responses import FileResponse
+
+router = APIRouter()
 
 class TextDownlaod:
 
@@ -21,16 +24,18 @@ class TextDownlaod:
             print('txt_gen_key:', speaker_id)
             #txt_file_path = os.path.join(self.speaker_scripts_dir, f"{self.org_filename}_{speaker_id}.txt")
             txt_file_path = os.path.join(self.speaker_scripts_dir, f"{self.upload_filename}_{speaker_id}.txt").replace("\\", "/")
-            # 파일 경로를 설정. 여기서는 단순히 키와 파일명을 일치시키는 방식.
-            # file_list = glob.glob(txt_file_path)
-            # print('file_list', file_list)
-            
-            # if file_list:  # 파일이 존재하는 경우에만 링크를 추가
             txt_file_links[speaker_id] = 'http://localhost:8000/' + txt_file_path
             print('txt_file_links : ', txt_file_links)
 
         return txt_file_links
-    
-    router = APIRouter()
 
-    # @router.get()
+@router.post("/download_txt/")
+async def download_txt_file(request: Request):
+    data = await request.json()
+    filename = data.get("filename")
+    upfile = filename.split("_")[0]
+    speaker_id = data.get("speaker_id")
+    scripts_txt_dir = os.path.join("scripts_text", filename)
+    file_path = os.path.join(scripts_txt_dir,f"{upfile}_{speaker_id}.txt")
+    print("file_path : " + file_path)
+    return FileResponse(file_path, filename=filename, media_type='txt')
