@@ -1,8 +1,8 @@
 // App.jsx
 import React, { useState } from 'react';
 import './App.css';
-import Header from './header';
-import Footer from './footer';
+import Header from './layout/header';
+import Footer from './layout/footer';
 
 const App = () => {
     const [file, setFile] = useState(null);

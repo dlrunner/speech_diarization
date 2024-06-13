@@ -1,0 +1,14 @@
+/* Footer.css */
+.footer {
+  background-color: rgb(209, 208, 208);
+  padding: 2rem 1rem; /* 위아래 여백을 2rem으로 설정 */
+  border-top: 1px solid #e0e0e0;
+  text-align: center;
+  width: 100%; /* 화면 너비에 맞추기 위해 추가 */
+  box-sizing: border-box; /* 패딩과 보더를 포함하여 너비를 계산 */
+}
+
+.footer .content {
+  max-width: 100%;
+  margin: 0 auto;
+}
