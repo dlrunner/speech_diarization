@@ -4,8 +4,14 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import speaker_google_download_hs
 import speaker_google_fastapi
+from fastapi.staticfiles import StaticFiles
 
 app = FastAPI()
+
+# scripts_text 디렉토리를 정적 파일 서비스로 추가
+#app.mount("/scripts_text", StaticFiles(directory="scripts_text"), name="scripts_text")
+# scripts_text 디렉토리를 정적 파일 서비스로 추가
+app.mount("/scripts_text", StaticFiles(directory="C:/Users/user/dev/team/speech_diarization/scripts_text"), name="scripts_text")
 
 app.add_middleware(
     CORSMiddleware,
