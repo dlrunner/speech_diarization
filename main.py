@@ -3,23 +3,26 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import speaker_google_download_hs
+import make_audio_api
 import speaker_google_fastapi
 from fastapi.staticfiles import StaticFiles
 
 app = FastAPI()
 
 # scripts_text 디렉토리를 정적 파일 서비스로 추가
-#app.mount("/scripts_text", StaticFiles(directory="scripts_text"), name="scripts_text")
-# scripts_text 디렉토리를 정적 파일 서비스로 추가
 app.mount("/scripts_text", StaticFiles(directory="C:/Users/user/dev/team/speech_diarization/scripts_text"), name="scripts_text")
 
 app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"]
+      CORSMiddleware
+    , allow_origins=["*"]
+    , allow_credentials=True
+    , allow_methods=["*"]
+    , allow_headers=["*"]
 )
-
-app.include_router(speaker_google_download_hs.router, prefix="/api")
+app.include_router(make_audio_api.router, prefix="/api")
 app.include_router(speaker_google_fastapi.router, prefix="/api")
+app.include_router(speaker_google_download_hs.router, prefix="/api")
+
+# if __name__ == "__main__":
+#     import uvicorn
+#     uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
