@@ -489,3 +489,29 @@ input[type="checkbox"] {
   height: 36px; 
 }
 
+@keyframes blink {
+  0%, 100% {
+      opacity: 1;
+  }
+  50% {
+      opacity: 0;
+  }
+}
+
+.results-bullet {
+  animation: blink 3s infinite;
+}
+
+.results-bullet.blink {
+  animation-delay: 0s;
+}
+
+.results-bullet.dimmed {
+  animation-delay: 0.3s;
+}
+
+.results-bullet.highlight {
+  animation-delay: 0.6s;
+}
+
+

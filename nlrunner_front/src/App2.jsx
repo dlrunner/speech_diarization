@@ -4,6 +4,7 @@ import './App2.css';
 import RecordingComponent from './RecordingComponent.jsx'; // 녹음 컴포넌트 임포트
 import Header from './layout/header';
 import Footer from './layout/footer';
+import Loader from './components/Loader';
 function FileCard({ imgSrc, alt, text }) {
     return (
       <section className="file-card">
@@ -160,7 +161,10 @@ const App2 = () => {
             </section>
             <section className="upload-section">
                 <div className="upload-container">
-                    <h1 className="upload-title">오디오 파일을 업로드해주세요.</h1>
+                    <h1 className="upload-title">{isLoading ? '오디오 필터링 중 기다려주세요!' : '오디오 파일을 업로드 해주세요'}</h1>
+                    {isLoading ? (
+                        <Loader/>
+                    ) : (
                     <form className="upload-form" onSubmit={handleSubmit}>
                     <button className="file-select-button">파일 선택</button>
 
@@ -186,13 +190,14 @@ const App2 = () => {
                             />
                         </button>
                     </form>
+                    )}
                 </div>
                 </section>
                 {/* 화자 분리 결과 및 다운로드 링크 표시 */}
-                {speakerTexts && (
+                {speakerTexts && !isLoading && (
                     <section className="results-container">
                         <div className="results-header">화자 분리 결과</div>
-                        <div className="results-bullet">•</div>
+                        <div className="results-bullet blink">•</div>
                         <div className="results-bullet dimmed">•</div>
                         <div className="results-bullet highlight">•</div>
                         <div className="results-duration">소요 시간: {duration}초</div>
