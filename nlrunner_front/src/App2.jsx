@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
-import './App2.css';
+import React, { useState, useRef } from 'react'
+import logo from './logo.svg';
+import './App2.css'
+import RecordingComponent from './RecordingComponent.jsx'; // 녹음 컴포넌트 임포트
 
-
-
-function MyComponent() {
-    // 상태 정의
+const App2 = () => {
     const [file, setFile] = useState(null);
     const [speakerTexts, setSpeakerTexts] = useState(null);
     const [textDownloadLinks, setTextDownloadLinks] = useState(null);
-    const [duration, setDuration] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
+    const [duration, setDuration] = useState(null); // 소요시간 표시용
     const [fileName, setFileName] = useState(null);
+    const [message, setMessage] = useState('');
 
     const handleFileChange = (event) => {
         const file = event.target.files[0];
@@ -63,101 +63,115 @@ function MyComponent() {
             setIsLoading(false); // 로딩 종료
         }
     };
+    const handleRecordingClick = () => {
+        setIsRecording(true); // 녹음 상태로 전환
+      };
 
-    const downloadFile = async (fileLink, speakerId) => {
-        try {
-            const response = await fetch(fileLink);
-            const text = await response.text();
-            const blob = new Blob([text], { type: 'text/plain' });
-            const url = window.URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download', `${speakerId}_transcript.txt`);
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        } catch (error) {
-            console.error('Error:', error);
-            alert('파일 다운로드 중 오류가 발생했습니다.');
+      const downloadFile = async (speakerId) => {
+        const downloadData = {
+            filename: fileName,
+            speaker_id: speakerId
         }
+        const download = await fetch('http://localhost:8000/api/download_txt/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(downloadData),
+        });
     };
 
 
     return (
-      <>
-        <section className="image-section">
-          <figure className="image-container">
-            <img
-              loading="lazy"
-              src="https://cdn.builder.io/api/v1/image/assets/TEMP/24c9bd176a5e8d8ca0b7b01d2704455bd5337f5d6c5180375bd3f24b58abf342?apiKey=9fb55b04424d4563a105428acb43ab19&"
-              alt="Description of the image"
-              className="main-image"
-            />
-          </figure>
-        </section>
-        <section className="upload-section">
-          <div className="upload-container">
-            <h1 className="upload-title">오디오 파일을 업로드해주세요.</h1>
-            <form className="upload-form" onSubmit={handleSubmit}>
-              <button className="file-select-button" type="button">
-                파일 선택
-              </button>
-              <div className="file-info">
-                <label htmlFor="file-upload" className="visually-hidden">
-                  파일을 선택해주세요.
-                </label>
-                <input
-                  type="file"
-                  id="file-upload"
-                  className="file-upload"
-                  aria-label="파일을 선택해주세요."
-                  onChange={handleFileChange}
-                />
-              </div>
-              <button className="file-upload-button" type="submit" disabled={isLoading}>
-              {isLoading ? '로딩 중...' : '파일 업로드'}
-              <img
-                  loading="lazy"
-                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/5bdc71e24f35d3498f1329292db22aa237d7c5aff0a858505015132b023b2d40?apiKey=9fb55b04424d4563a105428acb43ab19&"
-                  alt=""
-                  className="upload-icon"
-                />
-              </button>
-            </form>
-          </div>
-        {/* 화자 분리 결과 및 다운로드 링크 표시 */}
-        {speakerTexts && (
-          <div className="results-container">
-            <h2>화자 분리 결과</h2>
-            <h4>소요시간 : {duration}초</h4>
-            {Object.entries(speakerTexts).map(([speakerId, texts]) => (
-              <div key={speakerId}>
-                <h3>Speaker {speakerId}</h3>
-                <ul>
-                  {texts.map((text, index) => (
-                    <li key={index}>{text}</li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-        )}
-        {textDownloadLinks && (
-          <div className="download-container">
-            <h2>다운로드 가능한 TXT 파일</h2>
-            <ul>
-              {Object.entries(textDownloadLinks).map(([speakerId, fileLink]) => (
-                <li key={speakerId}>
-                  Speaker {speakerId}: <button onClick={() => downloadFile(fileLink, speakerId)}>다운로드 TXT 파일</button>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+        <>
+            <section className="image-section">
+                <figure className="image-container">
+                    <img
+                        loading="lazy"
+                        src="https://cdn.builder.io/api/v1/image/assets/TEMP/24c9bd176a5e8d8ca0b7b01d2704455bd5337f5d6c5180375bd3f24b58abf342?apiKey=9fb55b04424d4563a105428acb43ab19&"
+                        alt="Description of the image"
+                        className="main-image"
+                    />
+                </figure>
+            </section>
+            <section className="upload-section">
+                <div className="upload-container">
+                    <h1 className="upload-title">오디오 파일을 업로드해주세요.</h1>
+                    <form className="upload-form" onSubmit={handleSubmit}>
+                        <button className="file-select-button" type="button">
+                            파일 선택
+                        </button>
+                        <div className="file-info">
+                            <label htmlFor="file-upload" className="visually-hidden">
+                                파일을 선택해주세요.
+                            </label>
+                            <input
+                                type="file"
+                                id="file-upload"
+                                className="file-upload"
+                                aria-label="파일을 선택해주세요."
+                                onChange={handleFileChange}
+                            />
+                        </div>
+                        <button className="file-upload-button" type="submit" disabled={isLoading}>
+                            {isLoading ? '로딩 중...' : '파일 업로드'}
+                            <img
+                                loading="lazy"
+                                src="https://cdn.builder.io/api/v1/image/assets/TEMP/5bdc71e24f35d3498f1329292db22aa237d7c5aff0a858505015132b023b2d40?apiKey=9fb55b04424d4563a105428acb43ab19&"
+                                alt=""
+                                className="upload-icon"
+                            />
+                        </button>
+                    </form>
+                </div>
+                {/* 화자 분리 결과 및 다운로드 링크 표시 */}
+                {speakerTexts && (
+                    <div className="results-container">
+                        <div className="results-header">화자 분리 결과</div>
+                        <div className="results-bullet">•</div>
+                        <div className="results-bullet dimmed">•</div>
+                        <div className="results-bullet highlight">•</div>
+                        <div className="results-duration">소요 시간: {duration}초</div>
+                        <div className='results-container'>
+                            <div className="speaker-results">
+                                {Object.entries(speakerTexts).map(([speakerId, texts]) => (
+                                    <div className="speaker" key={speakerId}>
+                                        <div className="speaker-header">
+                                            <div className="div-9">
+                                                <div className="speaker-id">SPEAKER {speakerId}</div>
+                                                <img
+                                                    loading="lazy"
+                                                    src={`https://cdn.builder.io/api/v1/image/assets/TEMP/c8721954f6fdea1ecb1c144ac2e72c27ac31bb67260fa3cd2358f3686425e23a?apiKey=9fb55b04424d4563a105428acb43ab19&`}
+                                                    alt="speaker"
+                                                />
+                                                </div>
+                                        </div>
+                                        <div className="speaker-divider"></div>
+                                        <div className="speaker-text">
+                                            {texts.map((text, index) => (
+                                                <div key={`bullet-${index}`}>
+                                                    <div className="bullet">•</div>
+                                                    <div className="text">{text}</div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                        {textDownloadLinks && textDownloadLinks[speakerId] && (
+                        <button onClick={() => downloadFile(speakerId)}>Speaker{speakerId}.txt</button>)}
 
-        </section>
-      </>
+                                    </div>
+                                    
+                                
+                            )
+                            )}
+                        </div>
+                        </div>
+                    </div>
+                )}
+            </section>
+        </>
+
     );
-  }
+};
+
   
-export default MyComponent;
+export default App2;
