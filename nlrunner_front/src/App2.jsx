@@ -122,7 +122,6 @@ const App2 = () => {
 
   return (
     <>
-      {/* <Header /> Header 추가 */}
       <section className="image-section">
         <figure className="image-container">
           <img
