@@ -124,11 +124,6 @@ async def create_upload_file(file: UploadFile):
             for text in texts:
                 f.write(text + "\n")
 
-    # 텍스트 다운로드 인스턴스 생성
-    # text_download_link  = TextDownlaod(selected_speaker, speaker_scripts_dir, upload_filename)      
-    # text_download_links = text_download_link.generate_txt_links()      
-    # print("text_download_links :", text_download_links)
-
     duration = time.time() - start
     print("duration(sec) :", duration)
 
@@ -136,7 +131,6 @@ async def create_upload_file(file: UploadFile):
         "org_filename": org_filename,   # 원본파일명_타임스탬프.wav
         "speaker_texts": speaker_texts, # {화자 코드 : 내용}
         "duration": duration            # 소요시간
-        # ,"text_download_links": text_download_links
     }
 
     return JSONResponse(content=response_data)
