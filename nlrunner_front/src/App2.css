@@ -36,6 +36,7 @@
   width: 100%;
   /*! max-width: 800px; */
   /*! display: flex; */
+  max-width: 1200px;
 }
 
 .upload-title {
@@ -53,7 +54,7 @@
   font-size: 1.5rem;
   font-weight: 500;
   line-height: 1.33;
-  max-width: 100%;
+  /*! max-width: 1200px; */
   font-family: Pretendard Variable, -apple-system, Roboto, Helvetica, sans-serif;
 }
 
@@ -123,7 +124,8 @@
   /*! width: 100%; */
   padding: 2rem;
   animation: fadeIn 2s ease-in;
-  /*! align-items: center; */
+  align-items: center;
+  position: relative;
 }
 /* @media (max-width: 991px) {
   .results-container {
@@ -192,6 +194,7 @@
   color: #000;
   font-weight: 500;
   text-align: center;
+  align-items: center;
 }
 
 @media (max-width: 991px) {
@@ -252,12 +255,16 @@
   border-radius: 24px;
   box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.11) inset;
   background-color: #fff;
-  align-self: stretch;
+  /*! align-self: stretch; */
   margin-top: 57px;
   padding: 30px 28px;
-  max-width: 100%;
+  max-width: 1200px;
   /*! display: flex; */
   /*! flex-direction: row; */
+  width: 100%;
+  align-items: center;
+  /*! position: absolute; */
+  /*! position: relative; */
 }
 /* @media (max-width: 991px) {
   .results-container2 {
@@ -324,6 +331,7 @@
   background: none;
   border: none;
   cursor: pointer;
+  /*! width: ; */
 }
 @media (max-width: 991px) {
   .div-9 {
@@ -475,5 +483,9 @@
   width: 100%;
   justify-content: center;
   margin-top: 30px;
+}
+input[type="checkbox"] {
+  width: 36px; 
+  height: 36px; 
 }
 

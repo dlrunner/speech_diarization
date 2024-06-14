@@ -12,7 +12,19 @@ function FileCard({ imgSrc, alt, text }) {
       </section>
     );
   }
-  
+function Checkbox({ children, disabled, checked, onChange }) {
+    return (
+        <label>
+        <input
+            type="checkbox"
+            disabled={disabled}
+            checked={checked}
+            onChange={({ target: { checked } }) => onChange(checked)}
+        />
+        {children}
+        </label>
+    );
+}  
 const App2 = () => {
     const [file, setFile] = useState(null);
     const [speakerTexts, setSpeakerTexts] = useState(null);
@@ -20,6 +32,7 @@ const App2 = () => {
     const [duration, setDuration] = useState(null); // 소요시간 표시용
     const [fileName, setFileName] = useState(null);
     const [message, setMessage] = useState('');
+    const [checkSpeaker, setCheckSpeaker] = React.useState(false);
     const files = [
         { imgSrc: "https://cdn.builder.io/api/v1/image/assets/TEMP/8acf0177735b9653421f3b8d7f5f65d5e522bd6a5c732e3cb2963265a66fa00b?apiKey=9fb55b04424d4563a105428acb43ab19&", alt: "텍스트 파일 이미지", text: "텍스트 파일" },
         { imgSrc: "https://cdn.builder.io/api/v1/image/assets/TEMP/8acf0177735b9653421f3b8d7f5f65d5e522bd6a5c732e3cb2963265a66fa00b?apiKey=9fb55b04424d4563a105428acb43ab19&", alt: "오디오 파일 이미지", text: "오디오 파일" },
@@ -197,6 +210,8 @@ const App2 = () => {
                                     <form className="speaker" key={speakerId}>
                                         <div className="speaker-header">
                                             <div className="div-9">
+                                                <Checkbox checked={checkSpeaker} onChange={setCheckSpeaker}>
+                                                </Checkbox>
                                                 <div className="speaker-id">SPEAKER {speakerId}</div>
                                                 <img
                                                     loading="lazy"
