@@ -5,27 +5,30 @@ import RecordingComponent from './RecordingComponent.jsx'; // 녹음 컴포넌�
 import Header from './layout/header';
 import Footer from './layout/footer';
 import Loader from './components/Loader';
+
 function FileCard({ imgSrc, alt, text }) {
     return (
-      <section className="file-card">
-        <img loading="lazy" src={imgSrc} alt={alt} className="file-image" />
-        <div className="file-description">{text}</div>
-      </section>
+        <section className="file-card">
+            <img loading="lazy" src={imgSrc} alt={alt} className="file-image" />
+            <div className="file-description">{text}</div>
+        </section>
     );
-  }
+}
+
 function Checkbox({ children, disabled, checked, onChange }) {
     return (
         <label>
-        <input
-            type="checkbox"
-            disabled={disabled}
-            checked={checked}
-            onChange={({ target: { checked } }) => onChange(checked)}
-        />
-        {children}
+            <input
+                type="checkbox"
+                disabled={disabled}
+                checked={checked}
+                onChange={({ target: { checked } }) => onChange(checked)}
+            />
+            {children}
         </label>
     );
-}  
+}
+
 const App2 = () => {
     const [file, setFile] = useState(null);
     const [speakerTexts, setSpeakerTexts] = useState(null);
@@ -33,17 +36,20 @@ const App2 = () => {
     const [duration, setDuration] = useState(null); // 소요시간 표시용
     const [fileName, setFileName] = useState(null);
     const [message, setMessage] = useState('');
-    const [checkSpeaker, setCheckSpeaker] = React.useState(false);
+    const [checkSpeaker, setCheckSpeaker] = useState(false);
+    const fileInputRef = useRef(null);
+
     const files = [
         { imgSrc: "https://cdn.builder.io/api/v1/image/assets/TEMP/8acf0177735b9653421f3b8d7f5f65d5e522bd6a5c732e3cb2963265a66fa00b?apiKey=9fb55b04424d4563a105428acb43ab19&", alt: "텍스트 파일 이미지", text: "텍스트 파일" },
         { imgSrc: "https://cdn.builder.io/api/v1/image/assets/TEMP/8acf0177735b9653421f3b8d7f5f65d5e522bd6a5c732e3cb2963265a66fa00b?apiKey=9fb55b04424d4563a105428acb43ab19&", alt: "오디오 파일 이미지", text: "오디오 파일" },
-      ];
-    
+    ];
+
     const handleFileChange = (event) => {
         const file = event.target.files[0];
         if (file) {
             console.log('Selected file:', file.name);
             setFile(file); // 파일 선택 시 상태 업데이트
+            setFileName(file.name); // 파일 이름 설정
         }
     };
 
@@ -89,10 +95,6 @@ const App2 = () => {
         } finally {
             setIsLoading(false); // 로딩 종료
         }
-    };
-
-    const handleRecordingClick = () => {
-        setIsRecording(true); // 녹음 상태로 전환
     };
 
     const txtDownload = async (event, speakerId) => {
@@ -163,90 +165,95 @@ const App2 = () => {
                 <div className="upload-container">
                     <h1 className="upload-title">{isLoading ? '오디오 필터링 중 기다려주세요!' : '오디오 파일을 업로드 해주세요'}</h1>
                     {isLoading ? (
-                        <Loader/>
+                        <Loader />
                     ) : (
-                    <form className="upload-form" onSubmit={handleSubmit}>
-                    <button className="file-select-button">파일 선택</button>
-
-                        <div className="file-info">
-                            <label htmlFor="file-upload" className="visually-hidden">
-                                파일을 선택해주세요.
-                            </label>
-                            <input
-                                type="file"
-                                id="file-upload"
-                                className="file-upload"
-                                aria-label="파일을 선택해주세요."
-                                onChange={handleFileChange}
-                            />
-                        </div>
-                        <button className="file-upload-button" type="submit" disabled={isLoading}>
-                            {isLoading ? '로딩 중...' : '파일 업로드'}
-                            <img
-                                loading="lazy"
-                                src="https://cdn.builder.io/api/v1/image/assets/TEMP/5bdc71e24f35d3498f1329292db22aa237d7c5aff0a858505015132b023b2d40?apiKey=9fb55b04424d4563a105428acb43ab19&"
-                                alt=""
-                                className="upload-icon"
-                            />
-                        </button>
-                    </form>
+                        <form className="upload-form" onSubmit={handleSubmit}>
+                            <button
+                                type="button"
+                                className="file-select-button"
+                                onClick={() => fileInputRef.current.click()}
+                            >
+                                파일 선택
+                            </button>
+                            <div className="file-info">
+                                <label htmlFor="file-upload" className="visually-hidden"></label>
+                                <input
+                                    type="file"
+                                    id="file-upload"
+                                    ref={fileInputRef} // 참조를 추가합니다.
+                                    className="file-upload"
+                                    aria-label="파일을 선택해주세요."
+                                    onChange={handleFileChange}
+                                    style={{ display: 'none' }} // 입력 필드를 숨깁니다.
+                                />
+                                <input
+                                    type="text"
+                                    readOnly
+                                    value={fileName || ''}
+                                    className="file-name-display"
+                                    placeholder="선택된 파일이 없습니다"
+                                />
+                            </div>
+                            <button className="file-upload-button" type="submit" disabled={isLoading}>
+                                {isLoading ? '로딩 중...' : '파일 업로드'}
+                                <img
+                                    loading="lazy"
+                                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/5bdc71e24f35d3498f1329292db22aa237d7c5aff0a858505015132b023b2d40?apiKey=9fb55b04424d4563a105428acb43ab19&"
+                                    alt="업로드 아이콘"
+                                    className="upload-icon"
+                                />
+                            </button>
+                        </form>
                     )}
                 </div>
-                </section>
-                {/* 화자 분리 결과 및 다운로드 링크 표시 */}
-                {speakerTexts && !isLoading && (
-                    <section className="results-container">
-                        <div className="results-header">화자 분리 결과</div>
-                        <div className="results-bullet blink">•</div>
-                        <div className="results-bullet dimmed">•</div>
-                        <div className="results-bullet highlight">•</div>
-                        <div className="results-duration">소요 시간: {duration}초</div>
-                        <form className="container">
-                            <div className="files-wrapper">
+            </section>
+            {/* 화자 분리 결과 및 다운로드 링크 표시 */}
+            {speakerTexts && !isLoading && (
+                <section className="results-container">
+                    <div className="results-header">화자 분리 결과</div>
+                    <div className="results-bullet blink">•</div>
+                    <div className="results-bullet dimmed">•</div>
+                    <div className="results-bullet highlight">•</div>
+                    <div className="results-duration">소요 시간: {duration}초</div>
+                    <form className="container">
+                        <div className="files-wrapper">
                             {files.map((file, index) => (
                                 <FileCard key={index} imgSrc={file.imgSrc} alt={file.alt} text={file.text} />
                             ))}
-                            </div>
-                        </form>
+                        </div>
+                    </form>
 
-                        <form className='results-container2'>
-                            <div className="speaker-results">
-                                {Object.entries(speakerTexts).map(([speakerId, texts]) => (
-                                    <form className="speaker" key={speakerId}>
-                                        <div className="speaker-header">
-                                            <div className="div-9">
-                                                <Checkbox checked={checkSpeaker} onChange={setCheckSpeaker}>
-                                                </Checkbox>
-                                                <div className="speaker-id">SPEAKER {speakerId}</div>
-                                                <img
-                                                    loading="lazy"
-                                                    src={`https://cdn.builder.io/api/v1/image/assets/TEMP/c8721954f6fdea1ecb1c144ac2e72c27ac31bb67260fa3cd2358f3686425e23a?apiKey=9fb55b04424d4563a105428acb43ab19&`}
-                                                    alt="speaker"
-                                                />
-                                                </div>
+                    <form className='results-container2'>
+                        <div className="speaker-results">
+                            {Object.entries(speakerTexts).map(([speakerId, texts]) => (
+                                <form className="speaker" key={speakerId}>
+                                    <div className="speaker-header">
+                                        <div className="div-9">
+                                            <Checkbox checked={checkSpeaker} onChange={setCheckSpeaker}></Checkbox>
+                                            <div className="speaker-id">SPEAKER {speakerId}</div>
+                                            <img
+                                                loading="lazy"
+                                                src={`https://cdn.builder.io/api/v1/image/assets/TEMP/c8721954f6fdea1ecb1c144ac2e72c27ac31bb67260fa3cd2358f3686425e23a?apiKey=9fb55b04424d4563a105428acb43ab19&`}
+                                                alt="speaker"
+                                            />
                                         </div>
-                                        <div className="speaker-divider"></div>
-                                        <div className="speaker-text">
-                                            {texts.map((text, index) => (
-                                                // <div key={`bullet-${index}`}>
-                                                    <li key={index}>{text}</li>
-                                                    // <div className="bullet">•</div>
-                                                    // <div className="text">{text}</div>
-                                                // </div>
-                                            ))}
-                                        </div>
-                                        <button className="txt-download-button" onClick={(event) => txtDownload(event, speakerId)}>SPEAKER {speakerId}.txt</button>
-                                        <button className="wav-download-button" onClick={(event) => wavDownload(event, speakerId)}>SPEAKER {speakerId}.wav</button>
-                                    </form>                                                              
-                                )
-                            )}
-                            </div>
-                        </form>
-                    </section>
-                )}
-            <Footer /> 
+                                    </div>
+                                    <div className="speaker-divider"></div>
+                                    <div className="speaker-text">
+                                        {texts.map((text, index) => (
+                                            <li key={index}>{text}</li>
+                                        ))}
+                                    </div>
+                                    <button className="txt-download-button" onClick={(event) => txtDownload(event, speakerId)}>SPEAKER {speakerId}.txt</button>
+                                    <button className="wav-download-button" onClick={(event) => wavDownload(event, speakerId)}>SPEAKER {speakerId}.wav</button>
+                                </form>
+                            ))}
+                        </div>
+                    </form>
+                </section>
+            )}
+            <Footer />
         </>
-
     );
 };
 

@@ -83,13 +83,11 @@
   width: 235%;
 }
 
-.file-upload {
+.file-name-display {
   display: flex;
   align-items: center; /* 'start'에서 'center'로 변경 */
   border-radius: 40px;
-  box-shadow: -2px -2px 4px rgba(255, 255, 255, 0.5) inset,
-    2px 2px 4px rgba(170, 170, 204, 0.25) inset,
-    5px 5px 10px rgba(170, 170, 204, 0.5) inset;
+  box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.11) inset;
   background-color: #f5f5fa;
   justify-content: center;
   padding: 0.5rem;
