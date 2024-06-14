@@ -66,13 +66,48 @@ const App2 = () => {
     const handleRecordingClick = () => {
         setIsRecording(true); // 녹음 상태로 전환
       };
+      const txtDownload = async (speakerId) => {
+        const downloadData = {
+            filename: fileName,
+            speaker_id: speakerId
+        }
+        const response = await fetch('http://localhost:8000/api/download_txt/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(downloadData),
+        });
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${fileName.split('_')[0]}_${speakerId}.txt`;  // 다운로드 받을 파일 이름 설정
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+    };
+    const wavDownload = async (speakerId) => {
+        const downloadData = {
+            filename: fileName,
+            speaker_id: speakerId
+        }
+        const response = await fetch('/api/download_wav/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(downloadData),
+        });
+    };
 
       const downloadFile = async (speakerId) => {
         const downloadData = {
             filename: fileName,
             speaker_id: speakerId
         }
-        const download = await fetch('http://localhost:8000/api/download_txt/', {
+        const download = await fetch('/api/download_txt/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -150,15 +185,14 @@ const App2 = () => {
                                         <div className="speaker-divider"></div>
                                         <div className="speaker-text">
                                             {texts.map((text, index) => (
-                                                // <div key={`bullet-${index}`}>
                                                     <li key={index}>{text}</li>
-                                                    // <div className="bullet">•</div>
-                                                    // <div className="text">{text}</div>
-                                                // </div>
                                             ))}
                                         </div>
-                                        {textDownloadLinks && textDownloadLinks[speakerId] && (
-                                        <button className="txt-download-button" onClick={() => downloadFile(speakerId)}>SPEAKER {speakerId}.txt</button>)}
+                                        <button onClick={() => txtDownload(speakerId)}>TXT 파일 다운로드</button>
+                                        <button onClick={() => wavDownload(speakerId)}>통합 음성파일 다운로드</button>
+
+                                        {/* {textDownloadLinks && textDownloadLinks[speakerId] && (
+                                        <button className="txt-download-button" onClick={() => downloadFile(speakerId)}>SPEAKER {speakerId}.txt</button>)} */}
 
                                     </form>
                                     
