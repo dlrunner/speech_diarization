@@ -5,7 +5,7 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  background-color: #eee;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -25,10 +25,14 @@ a:hover {
 body {
   margin: 0;
   display: flex;
-  place-items: center;
+  justify-content: center;
+  /* align-items: center; */
+  flex-direction: column; /* 중앙 정렬을 위해 flex-direction을 column으로 설정 */
   min-width: 320px;
-  min-height: 100vh;
+  /* padding: 1rem; 반응형 패딩 추가 */
+  box-sizing: border-box;
 }
+
 
 h1 {
   font-size: 3.2em;
@@ -47,7 +51,8 @@ button {
   transition: border-color 0.25s;
 }
 button:hover {
-  border-color: #646cff;
+  /* border-color: #646cff; */
+  box-shadow: 0 0 0 0.2rem #646cff inset;
 }
 button:focus,
 button:focus-visible {
@@ -57,7 +62,7 @@ button:focus-visible {
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
-    background-color: #ffffff;
+    background-color: #eee;
   }
   a:hover {
     color: #747bff;
