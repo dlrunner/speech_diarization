@@ -119,7 +119,6 @@ async def create_upload_file(file: UploadFile):
     selected_speaker = []
         # 화자별 텍스트 파일로 저장
     for speaker_id, texts in speaker_texts.items():
-        # print("for문 : " , speaker_id)
         selected_speaker.append(speaker_id)
         speaker_text_file = os.path.join(speaker_scripts_dir, f"{upload_filename}_{speaker_id}.txt")
         with open(speaker_text_file, "w", encoding="utf-8") as f:
