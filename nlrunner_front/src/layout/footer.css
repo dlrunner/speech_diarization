@@ -1,14 +1,95 @@
 /* Footer.css */
 .footer {
-  background-color: rgb(209, 208, 208);
+  background-color: #343a40; /* 어두운 배경색 */
+  color: #ffffff; /* 흰색 글자색 */
   padding: 2rem 1rem; /* 위아래 여백을 2rem으로 설정 */
   border-top: 1px solid #e0e0e0;
   text-align: center;
   width: 100%; /* 화면 너비에 맞추기 위해 추가 */
   box-sizing: border-box; /* 패딩과 보더를 포함하여 너비를 계산 */
+  font-family: Pretendard Variable, -apple-system, Roboto, Helvetica, sans-serif; /* 폰트 적용 */
 }
 
 .footer .content {
-  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 1200px;
   margin: 0 auto;
+}
+
+.footer .logo {
+  margin-bottom: 1rem;
+}
+
+.footer .logo img {
+  width: 150px; /* 로고 크기 조정 */
+}
+
+.footer .links {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.footer .links a {
+  color: #ffffff;
+  text-decoration: none;
+  margin: 0 1rem;
+  font-size: 1rem;
+  transition: color 0.3s;
+}
+
+.footer .links a:hover {
+  color: #007bff; /* 링크 호버 색상 */
+}
+
+.footer .social-media {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.footer .social-media a {
+  color: #ffffff;
+  margin: 0 0.5rem;
+  font-size: 1.5rem;
+  transition: color 0.3s;
+}
+
+.footer .social-media a:hover {
+  color: #007bff; /* 소셜 미디어 아이콘 호버 색상 */
+}
+
+.footer .newsletter {
+  margin-bottom: 1rem;
+}
+
+.footer .newsletter input[type="email"] {
+  padding: 0.5rem;
+  border: none;
+  border-radius: 4px;
+  margin-right: 0.5rem;
+  font-size: 1rem;
+}
+
+.footer .newsletter button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: #ffffff;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.footer .newsletter button:hover {
+  background-color: #0056b3; /* 버튼 호버 색상 */
+}
+
+.footer .company-info {
+  font-size: 0.9rem;
+  margin-top: 1rem;
+  color: #b0b0b0;
 }

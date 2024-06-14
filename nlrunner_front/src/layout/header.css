@@ -5,6 +5,8 @@
   border-bottom: 2px solid #e0e0e0;
   display: flex;
   justify-content: center;
+  font-family: Pretendard Variable, -apple-system, Roboto, Helvetica, sans-serif; /* 폰트 적용 */
+
 }
 
 .header-content {
