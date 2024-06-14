@@ -1,22 +1,20 @@
+
 import React, { useState, useRef } from 'react'
 import './App.css'
 import RecordingComponent from './RecordingComponent.jsx'; // 녹음 컴포넌트 임포트
 
+
 const App = () => {
     const [file, setFile] = useState(null);
     const [speakerTexts, setSpeakerTexts] = useState(null);
-    const [textDownloadLinks, setTextDownloadLinks] = useState(null);
-    const [isLoading, setIsLoding] = useState(false);
-    const [duration, setDuration] = useState(null); //소요시간 표시용
-    const [fileName, setFileName] = useState(null);
-    const [isRecording, setIsRecording] = useState(false); // 녹음 상태 추가
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleFileChange = (event) => {
         setFile(event.target.files[0]);
     };
 
     const handleSubmit = async () => {
-        setIsLoding(true); //로딩 시작
+        setIsLoading(true); // 로딩 시작
         const formData = new FormData();
         formData.append('file', file);
 
@@ -34,9 +32,10 @@ const App = () => {
         } catch (error) {
             console.error('Error:', error);
         } finally {
-          setIsLoding(false); // 로딩 종료
+            setIsLoading(false); // 로딩 종료
         }
     };
+    
     const handleRecordingClick = () => {
         setIsRecording(true); // 녹음 상태로 전환
       };
@@ -57,7 +56,8 @@ const App = () => {
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `${fileName.split('_')[0]}_${speakerId}.txt`;  // 다운로드 받을 파일 이름 설정
+        a.download = `${fileName.split('_')[0]}_${speakerId}.txt`;
+
         document.body.appendChild(a);
         a.click();
         a.remove();
@@ -76,41 +76,46 @@ const App = () => {
             },
             body: JSON.stringify(downloadData),
         });
+
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${fileName.split('_')[0]}_${speakerId}.wav`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+
     };
 
     return (
-        <div>
-          {isRecording ? (
-            <RecordingComponent /> // 녹음 컴포넌트 렌더링
-          ) : (
-            <>
-              <h1>목소리필터 서비스</h1>
-              <button onClick={handleRecordingClick}>녹음</button>
-              <input type="file" accept='.wav' onChange={handleFileChange} />
-              <button onClick={handleSubmit} disabled={!file}>
-                {isLoading ? '로딩 중...잠시만 기다려주세요!' : '업로드'}
-              </button>
-              {speakerTexts && (
-                <div>
-                  <h2>화자 분리 결과</h2>
-                  <h4>소요시간 : {duration}초</h4>
-                  {Object.entries(speakerTexts).map(([speakerId, texts]) => (
-                    <div key={speakerId}>
-                      <h3>Speaker {speakerId}</h3>
-                      <ul>
-                        {texts.map((text, index) => (
-                          <li key={index}>{text}</li>
+        <div className="app-container">
+            <Header />
+            <main className="main-content">
+                <h1 style={{ color: 'pink' }}>목소리 필터 서비스</h1>
+                <input type="file" onChange={handleFileChange} />
+                <button onClick={handleSubmit} disabled={!file}>
+                    {isLoading ? '로딩 중... 잠시만 기다려주세요!' : '업로드'}
+                </button>
+                {speakerTexts && (
+                    <div>
+                        <h2>화자 분리 결과</h2>
+                        {Object.keys(speakerTexts).map((speakerId) => (
+                            <div key={speakerId}>
+                                <h3>Speaker {speakerId}</h3>
+                                <ul>
+                                    {speakerTexts[speakerId].map((text, index) => (
+                                        <li key={index}>{text}</li>
+                                    ))}
+                                </ul>
+                            </div>
                         ))}
-                      </ul>
-                      <h2>파일 다운로드</h2>
-                        <button onClick={() => txtDownload(speakerId)}>TXT 파일 다운로드</button>
-                        <button onClick={() => wavDownload(speakerId)}>통합 음성파일 다운로드</button>
+
                     </div>
-                  ))}
-                </div>
-              )}
-            </>
-          )}
+                )}
+            </main>
+            <Footer />
         </div>
       );
     };

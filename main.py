@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import make_audio_api
 import speaker_google_fastapi
-import text_download
+import diart_download
 
 app = FastAPI()
 
@@ -18,4 +18,4 @@ app.add_middleware(
 
 app.include_router(make_audio_api.router, prefix="/api")
 app.include_router(speaker_google_fastapi.router, prefix="/api")
-app.include_router(text_download.router, prefix="/api")
+app.include_router(diart_download.router, prefix="/api")
