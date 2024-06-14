@@ -71,7 +71,7 @@ const App2 = () => {
             filename: fileName,
             speaker_id: speakerId
         }
-        const response = await fetch('http://localhost:8000/api/download_txt/', {
+        const response = await fetch('/api/download_txt/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
