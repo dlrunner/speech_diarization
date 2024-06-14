@@ -32,10 +32,12 @@ class TextDownlaod:
 @router.post("/download_txt/")
 async def download_txt_file(request: Request):
     data = await request.json()
-    filename = data.get("filename")
-    upfile = filename.split("_")[0]
     speaker_id = data.get("speaker_id")
+    filename = data.get("filename")
     scripts_txt_dir = os.path.join("scripts_text", filename)
-    file_path = os.path.join(scripts_txt_dir,f"{upfile}_{speaker_id}.txt")
+    upfile = filename.split("_")[0]
+    downfile = f"{upfile}_{speaker_id}.txt"
+    file_path = os.path.join(scripts_txt_dir, downfile)
     print("file_path : " + file_path)
-    return FileResponse(file_path, filename=filename, media_type='txt')
+    print("downfile : " + downfile)
+    return FileResponse(file_path, filename=downfile, media_type='text/plain')
