@@ -1,14 +1,8 @@
-<<<<<<< HEAD
-// App.jsx
-import React, { useState } from 'react';
-import './App.css';
-// import Header from './layout/header';
-// import Footer from './layout/footer';
-=======
+
 import React, { useState, useRef } from 'react'
 import './App.css'
 import RecordingComponent from './RecordingComponent.jsx'; // 녹음 컴포넌트 임포트
->>>>>>> 07f8f8bfc337c0bccc126ddbcda132a3754532c2
+
 
 const App = () => {
     const [file, setFile] = useState(null);
@@ -62,7 +56,8 @@ const App = () => {
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `${fileName.split('_')[0]}_${speakerId}.txt`;  // 다운로드 받을 파일 이름 설정
+        a.download = `${fileName.split('_')[0]}_${speakerId}.txt`;
+
         document.body.appendChild(a);
         a.click();
         a.remove();
@@ -86,7 +81,7 @@ const App = () => {
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `${fileName.split('_')[0]}_${speakerId}.wav`;  // 다운로드 받을 파일 이름 설정
+        a.download = `${fileName.split('_')[0]}_${speakerId}.wav`;
         document.body.appendChild(a);
         a.click();
         a.remove();
@@ -116,23 +111,11 @@ const App = () => {
                                 </ul>
                             </div>
                         ))}
-<<<<<<< HEAD
+
                     </div>
                 )}
             </main>
             <Footer />
-=======
-                      </ul>
-                      <h2>파일 다운로드</h2>
-                        <button onClick={() => txtDownload(speakerId)}>TXT 파일 다운로드</button>
-                        <button onClick={() => wavDownload(speakerId)}>통합 음성파일 다운로드</button>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </>
-          )}
->>>>>>> 07f8f8bfc337c0bccc126ddbcda132a3754532c2
         </div>
       );
     };

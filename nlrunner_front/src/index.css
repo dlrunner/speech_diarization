@@ -50,6 +50,8 @@ button {
 }
 
 button:hover {
+  /* border-color: #646cff; */
+
   box-shadow: 0 0 0 0.2rem #646cff inset;
 }
 

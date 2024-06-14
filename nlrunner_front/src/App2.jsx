@@ -8,7 +8,6 @@ import Footer from './layout/footer';
 const App2 = () => {
     const [file, setFile] = useState(null);
     const [speakerTexts, setSpeakerTexts] = useState(null);
-    const [textDownloadLinks, setTextDownloadLinks] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [duration, setDuration] = useState(null); // 소요시간 표시용
     const [fileName, setFileName] = useState(null);
@@ -35,7 +34,7 @@ const App2 = () => {
         formData.append('file', file);
 
         try {
-            const response = await fetch('http://localhost:8000/api/uploadfile/', {
+            const response = await fetch('/api/uploadfile/', {
                 method: 'POST',
                 body: formData,
             });
@@ -56,7 +55,6 @@ const App2 = () => {
 
             // 나머지 필드들 설정
             setSpeakerTexts(data.speaker_texts);
-            setTextDownloadLinks(data.text_download_links);
             setFileName(data.org_filename);
 
         } catch (error) {
@@ -71,18 +69,55 @@ const App2 = () => {
         setIsRecording(true); // 녹음 상태로 전환
     };
 
-    const downloadFile = async (speakerId) => {
+    const txtDownload = async (event, speakerId) => {
+        event.preventDefault();
         const downloadData = {
             filename: fileName,
             speaker_id: speakerId
-        };
-        const download = await fetch('http://localhost:8000/api/download_txt/', {
+        }
+        const response = await fetch('/api/download_txt/', {
+
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(downloadData),
         });
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${fileName.split('_')[0]}_${speakerId}.txt`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+    };
+
+    const wavDownload = async (event, speakerId) => {
+        event.preventDefault();
+        const downloadData = {
+            filename: fileName,
+            speaker_id: speakerId
+        }
+        const response = await fetch('/api/download_wav/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(downloadData),
+        });
+
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${fileName.split('_')[0]}_${speakerId}.wav`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+
     };
 
     return (
@@ -102,6 +137,7 @@ const App2 = () => {
                 <div className="upload-container">
                     <h1 className="upload-title">오디오 파일을 업로드해주세요.</h1>
                     <form className="upload-form" onSubmit={handleSubmit}>
+
                         <div className="file-info">
                             <label htmlFor="file-upload" className="visually-hidden">
                                 파일을 선택해주세요.
@@ -125,46 +161,53 @@ const App2 = () => {
                         </button>
                     </form>
                 </div>
-            </section>
-            {/* 화자 분리 결과 및 다운로드 링크 표시 */}
-            {speakerTexts && (
-                <section className="results-container">
-                    <div className="results-header">화자 분리 결과</div>
-                    <div className="results-bullet">•</div>
-                    <div className="results-bullet dimmed">•</div>
-                    <div className="results-bullet highlight">•</div>
-                    <div className="results-duration">소요 시간: {duration}초</div>
-                    <form className='results-container2'>
-                        <div className="speaker-results">
-                            {Object.entries(speakerTexts).map(([speakerId, texts]) => (
-                                <div className="speaker" key={speakerId}>
-                                    <div className="speaker-header">
-                                        <div className="div-9">
-                                            <div className="speaker-id">SPEAKER {speakerId}</div>
-                                            <img
-                                                loading="lazy"
-                                                src={`https://cdn.builder.io/api/v1/image/assets/TEMP/c8721954f6fdea1ecb1c144ac2e72c27ac31bb67260fa3cd2358f3686425e23a?apiKey=9fb55b04424d4563a105428acb43ab19&`}
-                                                alt="speaker"
-                                            />
-                                        </div>
-                                    </div>
-                                    <div className="speaker-divider"></div>
-                                    <div className="speaker-text">
-                                        {texts.map((text, index) => (
-                                            <li key={index}>{text}</li>
-                                        ))}
-                                    </div>
-                                    {textDownloadLinks && textDownloadLinks[speakerId] && (
-                                        <button className="txt-download-button" onClick={() => downloadFile(speakerId)}>SPEAKER {speakerId}.txt</button>
-                                    )}
-                                </div>
-                            ))}
-                        </div>
-                    </form>
                 </section>
-            )}
-            <Footer /> {/* Footer 추가 */}
+                {/* 화자 분리 결과 및 다운로드 링크 표시 */}
+                {speakerTexts && (
+                    <section className="results-container">
+                        <div className="results-header">화자 분리 결과</div>
+                        <div className="results-bullet">•</div>
+                        <div className="results-bullet dimmed">•</div>
+                        <div className="results-bullet highlight">•</div>
+                        <div className="results-duration">소요 시간: {duration}초</div>
+                        <form className='results-container2'>
+                            <div className="speaker-results">
+                                {Object.entries(speakerTexts).map(([speakerId, texts]) => (
+                                    <form className="speaker" key={speakerId}>
+                                        <div className="speaker-header">
+                                            <div className="div-9">
+                                                <div className="speaker-id">SPEAKER {speakerId}</div>
+                                                <img
+                                                    loading="lazy"
+                                                    src={`https://cdn.builder.io/api/v1/image/assets/TEMP/c8721954f6fdea1ecb1c144ac2e72c27ac31bb67260fa3cd2358f3686425e23a?apiKey=9fb55b04424d4563a105428acb43ab19&`}
+                                                    alt="speaker"
+                                                />
+                                                </div>
+                                        </div>
+                                        <div className="speaker-divider"></div>
+                                        <div className="speaker-text">
+                                            {texts.map((text, index) => (
+                                                // <div key={`bullet-${index}`}>
+                                                    <li key={index}>{text}</li>
+                                                    // <div className="bullet">•</div>
+                                                    // <div className="text">{text}</div>
+                                                // </div>
+                                            ))}
+                                        </div>
+                                        <button className="txt-download-button" onClick={(event) => txtDownload(event, speakerId)}>SPEAKER {speakerId}.txt</button>
+                                        <button className="wav-download-button" onClick={(event) => wavDownload(event, speakerId)}>SPEAKER {speakerId}.wav</button>
+                                    </form>
+                                    
+                                
+                            )
+                            )}
+                            </div>
+                        </form>
+                    </section>
+                )}
+
         </>
+
     );
 };
 
