@@ -4,7 +4,15 @@ import './App2.css';
 import RecordingComponent from './RecordingComponent.jsx'; // 녹음 컴포넌트 임포트
 import Header from './layout/header';
 import Footer from './layout/footer';
-
+function FileCard({ imgSrc, alt, text }) {
+    return (
+      <section className="file-card">
+        <img loading="lazy" src={imgSrc} alt={alt} className="file-image" />
+        <div className="file-description">{text}</div>
+      </section>
+    );
+  }
+  
 const App2 = () => {
     const [file, setFile] = useState(null);
     const [speakerTexts, setSpeakerTexts] = useState(null);
@@ -12,7 +20,11 @@ const App2 = () => {
     const [duration, setDuration] = useState(null); // 소요시간 표시용
     const [fileName, setFileName] = useState(null);
     const [message, setMessage] = useState('');
-
+    const files = [
+        { imgSrc: "https://cdn.builder.io/api/v1/image/assets/TEMP/8acf0177735b9653421f3b8d7f5f65d5e522bd6a5c732e3cb2963265a66fa00b?apiKey=9fb55b04424d4563a105428acb43ab19&", alt: "텍스트 파일 이미지", text: "텍스트 파일" },
+        { imgSrc: "https://cdn.builder.io/api/v1/image/assets/TEMP/8acf0177735b9653421f3b8d7f5f65d5e522bd6a5c732e3cb2963265a66fa00b?apiKey=9fb55b04424d4563a105428acb43ab19&", alt: "오디오 파일 이미지", text: "오디오 파일" },
+      ];
+    
     const handleFileChange = (event) => {
         const file = event.target.files[0];
         if (file) {
@@ -137,6 +149,7 @@ const App2 = () => {
                 <div className="upload-container">
                     <h1 className="upload-title">오디오 파일을 업로드해주세요.</h1>
                     <form className="upload-form" onSubmit={handleSubmit}>
+                    <button className="file-select-button">파일 선택</button>
 
                         <div className="file-info">
                             <label htmlFor="file-upload" className="visually-hidden">
@@ -170,6 +183,14 @@ const App2 = () => {
                         <div className="results-bullet dimmed">•</div>
                         <div className="results-bullet highlight">•</div>
                         <div className="results-duration">소요 시간: {duration}초</div>
+                        <form className="container">
+                            <div className="files-wrapper">
+                            {files.map((file, index) => (
+                                <FileCard key={index} imgSrc={file.imgSrc} alt={file.alt} text={file.text} />
+                            ))}
+                            </div>
+                        </form>
+
                         <form className='results-container2'>
                             <div className="speaker-results">
                                 {Object.entries(speakerTexts).map(([speakerId, texts]) => (
