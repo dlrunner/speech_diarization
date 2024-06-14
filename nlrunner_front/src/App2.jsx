@@ -5,6 +5,7 @@ import RecordingComponent from './RecordingComponent.jsx'; // 녹음 컴포넌�
 import Header from './layout/header';
 import Footer from './layout/footer';
 import Loader from './components/Loader';
+import Accordion from "./components/Accordion.jsx";
 
 function FileCard({ imgSrc, alt, text }) {
     return (
@@ -12,20 +13,6 @@ function FileCard({ imgSrc, alt, text }) {
             <img loading="lazy" src={imgSrc} alt={alt} className="file-image" />
             <div className="file-description">{text}</div>
         </section>
-    );
-}
-
-function Checkbox({ children, disabled, checked, onChange }) {
-    return (
-        <label>
-            <input
-                type="checkbox"
-                disabled={disabled}
-                checked={checked}
-                onChange={({ target: { checked } }) => onChange(checked)}
-            />
-            {children}
-        </label>
     );
 }
 
@@ -223,33 +210,16 @@ const App2 = () => {
                         </div>
                     </form>
 
-                    <form className='results-container2'>
-                        <div className="speaker-results">
-                            {Object.entries(speakerTexts).map(([speakerId, texts]) => (
-                                <form className="speaker" key={speakerId}>
-                                    <div className="speaker-header">
-                                        <div className="div-9">
-                                            <Checkbox checked={checkSpeaker} onChange={setCheckSpeaker}></Checkbox>
-                                            <div className="speaker-id">SPEAKER {speakerId}</div>
-                                            <img
-                                                loading="lazy"
-                                                src={`https://cdn.builder.io/api/v1/image/assets/TEMP/c8721954f6fdea1ecb1c144ac2e72c27ac31bb67260fa3cd2358f3686425e23a?apiKey=9fb55b04424d4563a105428acb43ab19&`}
-                                                alt="speaker"
-                                            />
-                                        </div>
-                                    </div>
-                                    <div className="speaker-divider"></div>
-                                    <div className="speaker-text">
-                                        {texts.map((text, index) => (
-                                            <li key={index}>{text}</li>
-                                        ))}
-                                    </div>
-                                    <button className="txt-download-button" onClick={(event) => txtDownload(event, speakerId)}>SPEAKER {speakerId}.txt</button>
-                                    <button className="wav-download-button" onClick={(event) => wavDownload(event, speakerId)}>SPEAKER {speakerId}.wav</button>
-                                </form>
-                            ))}
-                        </div>
-                    </form>
+                    <div>
+                        {Object.entries(speakerTexts).map((speakerId) => (
+                        <Accordion
+                            key={speakerId}
+                            id={speakerId}
+                            txtDownload={txtDownload}
+                            wavDownload={wavDownload}
+                        />
+                        ))}
+                    </div>
                 </section>
             )}
             <Footer />
