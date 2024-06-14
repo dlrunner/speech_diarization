@@ -58,7 +58,7 @@ const App = () => {
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `${fileName.split('_')[0]}_${speakerId}.txt`;  // 다운로드 받을 파일 이름 설정
+        a.download = `${fileName.split('_')[0]}_${speakerId}.txt`;
         document.body.appendChild(a);
         a.click();
         a.remove();
@@ -82,7 +82,7 @@ const App = () => {
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `${fileName.split('_')[0]}_${speakerId}.wav`;  // 다운로드 받을 파일 이름 설정
+        a.download = `${fileName.split('_')[0]}_${speakerId}.wav`;
         document.body.appendChild(a);
         a.click();
         a.remove();

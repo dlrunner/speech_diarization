@@ -6,7 +6,6 @@ import RecordingComponent from './RecordingComponent.jsx'; // 녹음 컴포넌�
 const App2 = () => {
     const [file, setFile] = useState(null);
     const [speakerTexts, setSpeakerTexts] = useState(null);
-    const [textDownloadLinks, setTextDownloadLinks] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [duration, setDuration] = useState(null); // 소요시간 표시용
     const [fileName, setFileName] = useState(null);
@@ -32,7 +31,7 @@ const App2 = () => {
         formData.append('file', file);
     
         try {
-            const response = await fetch('http://localhost:8000/api/uploadfile/', {
+            const response = await fetch('/api/uploadfile/', {
                 method: 'POST',
                 body: formData,
             });
@@ -53,7 +52,6 @@ const App2 = () => {
     
             // 나머지 필드들 설정
             setSpeakerTexts(data.speaker_texts);
-            setTextDownloadLinks(data.text_download_links);
             setFileName(data.org_filename);
             
         } catch (error) {
@@ -67,20 +65,55 @@ const App2 = () => {
         setIsRecording(true); // 녹음 상태로 전환
       };
 
-      const downloadFile = async (speakerId) => {
+    const txtDownload = async (event, speakerId) => {
+        event.preventDefault();
         const downloadData = {
             filename: fileName,
             speaker_id: speakerId
         }
-        const download = await fetch('http://localhost:8000/api/download_txt/', {
+        const response = await fetch('/api/download_txt/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(downloadData),
         });
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${fileName.split('_')[0]}_${speakerId}.txt`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
     };
 
+    const wavDownload = async (event, speakerId) => {
+        event.preventDefault();
+        const downloadData = {
+            filename: fileName,
+            speaker_id: speakerId
+        }
+        const response = await fetch('/api/download_wav/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(downloadData),
+        });
+
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${fileName.split('_')[0]}_${speakerId}.wav`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+
+    };
 
     return (
         <>
@@ -157,9 +190,8 @@ const App2 = () => {
                                                 // </div>
                                             ))}
                                         </div>
-                                        {textDownloadLinks && textDownloadLinks[speakerId] && (
-                                        <button className="txt-download-button" onClick={() => downloadFile(speakerId)}>SPEAKER {speakerId}.txt</button>)}
-
+                                        <button className="txt-download-button" onClick={(event) => txtDownload(event, speakerId)}>SPEAKER {speakerId}.txt</button>
+                                        <button className="wav-download-button" onClick={(event) => wavDownload(event, speakerId)}>SPEAKER {speakerId}.wav</button>
                                     </form>
                                     
                                 

@@ -113,8 +113,8 @@ async def create_upload_file(file: UploadFile):
                 print(f"화자 {speaker_id}: 요청 오류 {e}")
             print("----" * 10)
 
-    speaker_dir_name = os.path.join(speaker_dirs, org_filename + "_dict.pickle")
-    joblib.dump(speaker_texts, speaker_dir_name)
+    # speaker_dir_name = os.path.join(speaker_dirs, org_filename + "_dict.pickle")
+    # joblib.dump(speaker_texts, speaker_dir_name)
 
     selected_speaker = []
         # 화자별 텍스트 파일로 저장
