@@ -15,6 +15,7 @@ app.add_middleware(
     , allow_methods=["*"]
     , allow_headers=["*"]
 )
+
 app.include_router(make_audio_api.router, prefix="/api")
 app.include_router(speaker_google_fastapi.router, prefix="/api")
 app.include_router(text_download.router, prefix="/api")
