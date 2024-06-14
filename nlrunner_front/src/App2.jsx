@@ -196,16 +196,14 @@ const App2 = () => {
                                         </div>
                                         <button className="txt-download-button" onClick={(event) => txtDownload(event, speakerId)}>SPEAKER {speakerId}.txt</button>
                                         <button className="wav-download-button" onClick={(event) => wavDownload(event, speakerId)}>SPEAKER {speakerId}.wav</button>
-                                    </form>
-                                    
-                                
-                            )
+                                    </form>                                                              
+                                )
                             )}
                             </div>
                         </form>
                     </section>
                 )}
-
+            <Footer /> 
         </>
 
     );
