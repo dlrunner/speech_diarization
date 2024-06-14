@@ -2,8 +2,9 @@ import React, { useState, useRef } from "react";
 import logo from "./logo.svg";
 import "./App2.css";
 import RecordingComponent from "./RecordingComponent.jsx"; // 녹음 컴포넌트 임포트
-import AccordionContainer from "./components/AccordionContainer.jsx";
 import Accordion from "./components/Accordion.jsx";
+import Header from "./layout/header";
+import Footer from "./layout/footer";
 
 const App2 = () => {
   const [file, setFile] = useState(null);
@@ -68,12 +69,48 @@ const App2 = () => {
   const handleRecordingClick = () => {
     setIsRecording(true); // 녹음 상태로 전환
   };
+  const txtDownload = async (speakerId) => {
+    const downloadData = {
+      filename: fileName,
+      speaker_id: speakerId,
+    };
+    const response = await fetch("/api/download_txt/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(downloadData),
+    });
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${fileName.split("_")[0]}_${speakerId}.txt`; // 다운로드 받을 파일 이름 설정
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    window.URL.revokeObjectURL(url);
+  };
+  const wavDownload = async (speakerId) => {
+    const downloadData = {
+      filename: fileName,
+      speaker_id: speakerId,
+    };
+    const response = await fetch("/api/download_wav/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(downloadData),
+    });
+  };
 
   const downloadFile = async (speakerId) => {
     const downloadData = {
       filename: fileName,
       speaker_id: speakerId,
     };
+
     const download = await fetch("http://localhost:8000/api/download_txt/", {
       method: "POST",
       headers: {
@@ -85,6 +122,7 @@ const App2 = () => {
 
   return (
     <>
+      <Header /> {/* Header 추가 */}
       <section className="image-section">
         <figure className="image-container">
           <img
@@ -132,11 +170,20 @@ const App2 = () => {
         <section className="results-container">
           <div>
             {Object.entries(speakerTexts).map((speakerId) => (
-              <Accordion key={speakerId} id={speakerId}/>
+              <Accordion key={speakerId} id={speakerId} />
             ))}
+            {textDownloadLinks && textDownloadLinks[speakerId] && (
+              <button
+                className="txt-download-button"
+                onClick={() => downloadFile(speakerId)}
+              >
+                SPEAKER {speakerId}.txt
+              </button>
+            )}
           </div>
         </section>
       )}
+      <Footer /> {/* Footer 추가 */}
     </>
   );
 };

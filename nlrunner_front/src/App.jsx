@@ -1,5 +1,4 @@
 import React, { useState, useRef } from 'react'
-import logo from './logo.svg';
 import './App.css'
 import RecordingComponent from './RecordingComponent.jsx'; // 녹음 컴포넌트 임포트
 
@@ -22,14 +21,14 @@ const App = () => {
         formData.append('file', file);
 
         try {
-            const response = await fetch('http://localhost:8000/api/uploadfile/', {
+            const response = await fetch('/api/uploadfile/', {
                 method: 'POST',
                 body: formData,
             });
             const data = await response.json();
-            // console.log('API Response : ', data);
+            console.log('API Response : ', data);
             setSpeakerTexts(data.speaker_texts);
-            setTextDownloadLinks(data.text_download_links);
+            // setTextDownloadLinks(data.text_download_links);
             setDuration(data.duration.toFixed(1));
             setFileName(data.org_filename);
         } catch (error) {
@@ -38,37 +37,57 @@ const App = () => {
           setIsLoding(false); // 로딩 종료
         }
     };
+    
     const handleRecordingClick = () => {
         setIsRecording(true); // 녹음 상태로 전환
       };
-    // const downloadFile = async (fileLink) => {
-    //     try {
-    //         const response = await fetch(fileLink);
-    //         const text = await response.text();
-    //         const blob = new Blob([text], { type: 'text/plain' });
-    //         const url = window.URL.createObjectURL(blob);
-    //         const link = document.createElement('a');
-    //         link.href = url;
-    //         link.setAttribute('download', 'filename.txt');
-    //         document.body.appendChild(link);
-    //         link.click();
-    //         document.body.removeChild(link);
-    //     } catch (error) {
-    //         console.error('Error:', error);
-    //     }
-    // };
-    const downloadFile = async (speakerId) => {
+
+    const txtDownload = async (speakerId) => {
         const downloadData = {
             filename: fileName,
             speaker_id: speakerId
         }
-        const download = await fetch('http://localhost:8000/api/download_txt/', {
+        const response = await fetch('/api/download_txt/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(downloadData),
         });
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${fileName.split('_')[0]}_${speakerId}.txt`;  // 다운로드 받을 파일 이름 설정
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+    };
+
+    const wavDownload = async (speakerId) => {
+        const downloadData = {
+            filename: fileName,
+            speaker_id: speakerId
+        }
+        const response = await fetch('/api/download_wav/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(downloadData),
+        });
+
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${fileName.split('_')[0]}_${speakerId}.wav`;  // 다운로드 받을 파일 이름 설정
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+
     };
 
     return (
@@ -95,21 +114,11 @@ const App = () => {
                           <li key={index}>{text}</li>
                         ))}
                       </ul>
+                      <h2>파일 다운로드</h2>
+                        <button onClick={() => txtDownload(speakerId)}>TXT 파일 다운로드</button>
+                        <button onClick={() => wavDownload(speakerId)}>통합 음성파일 다운로드</button>
                     </div>
                   ))}
-                </div>
-              )}
-              {textDownloadLinks && (
-                <div>
-                  <h2>다운로드 가능한 TXT 파일</h2>
-                  <ul>
-                    {Object.entries(textDownloadLinks).map(([speakerId, fileLink]) => (                      
-                        <li key={speakerId}>
-                            {/* Speaker {speakerId}: <button onClick={() => downloadFile(fileLink)}>다운로드 TXT 파일</button> */}
-                            Speaker {speakerId}: <button onClick={() => downloadFile(speakerId)}>다운로드 TXT 파일</button>
-                        </li>
-                    ))}
-                  </ul>
                 </div>
               )}
             </>
