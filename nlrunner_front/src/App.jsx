@@ -1,5 +1,4 @@
 import React, { useState, useRef } from 'react'
-import logo from './logo.svg';
 import './App.css'
 import RecordingComponent from './RecordingComponent.jsx'; // 녹음 컴포넌트 임포트
 
@@ -22,7 +21,7 @@ const App = () => {
         formData.append('file', file);
 
         try {
-            const response = await fetch('http://localhost:8000/api/uploadfile/', {
+            const response = await fetch('/api/uploadfile/', {
                 method: 'POST',
                 body: formData,
             });
@@ -48,7 +47,7 @@ const App = () => {
             filename: fileName,
             speaker_id: speakerId
         }
-        const response = await fetch('http://localhost:8000/api/download_txt/', {
+        const response = await fetch('/api/download_txt/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -71,13 +70,14 @@ const App = () => {
             filename: fileName,
             speaker_id: speakerId
         }
-        const response = await fetch('http://localhost:8000/api/download_wav/', {
+        const response = await fetch('/api/download_wav/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(downloadData),
         });
+
         const blob = await response.blob();
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -87,6 +87,7 @@ const App = () => {
         a.click();
         a.remove();
         window.URL.revokeObjectURL(url);
+
     };
 
     return (
