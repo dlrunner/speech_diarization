@@ -98,9 +98,9 @@ const App2 = () => {
                 <div className="upload-container">
                     <h1 className="upload-title">오디오 파일을 업로드해주세요.</h1>
                     <form className="upload-form" onSubmit={handleSubmit}>
-                        <button className="file-select-button" type="button">
+                        {/* <button className="file-select-button" type="button">
                             파일 선택
-                        </button>
+                        </button> */}
                         <div className="file-info">
                             <label htmlFor="file-upload" className="visually-hidden">
                                 파일을 선택해주세요.
@@ -124,18 +124,19 @@ const App2 = () => {
                         </button>
                     </form>
                 </div>
+                </section>
                 {/* 화자 분리 결과 및 다운로드 링크 표시 */}
                 {speakerTexts && (
-                    <div className="results-container">
+                    <section className="results-container">
                         <div className="results-header">화자 분리 결과</div>
                         <div className="results-bullet">•</div>
                         <div className="results-bullet dimmed">•</div>
                         <div className="results-bullet highlight">•</div>
                         <div className="results-duration">소요 시간: {duration}초</div>
-                        <div className='results-container'>
+                        <form className='results-container2'>
                             <div className="speaker-results">
                                 {Object.entries(speakerTexts).map(([speakerId, texts]) => (
-                                    <div className="speaker" key={speakerId}>
+                                    <form className="speaker" key={speakerId}>
                                         <div className="speaker-header">
                                             <div className="div-9">
                                                 <div className="speaker-id">SPEAKER {speakerId}</div>
@@ -149,25 +150,26 @@ const App2 = () => {
                                         <div className="speaker-divider"></div>
                                         <div className="speaker-text">
                                             {texts.map((text, index) => (
-                                                <div key={`bullet-${index}`}>
-                                                    <div className="bullet">•</div>
-                                                    <div className="text">{text}</div>
-                                                </div>
+                                                // <div key={`bullet-${index}`}>
+                                                    <li key={index}>{text}</li>
+                                                    // <div className="bullet">•</div>
+                                                    // <div className="text">{text}</div>
+                                                // </div>
                                             ))}
                                         </div>
                                         {textDownloadLinks && textDownloadLinks[speakerId] && (
-                        <button onClick={() => downloadFile(speakerId)}>Speaker{speakerId}.txt</button>)}
+                                        <button className="txt-download-button" onClick={() => downloadFile(speakerId)}>SPEAKER {speakerId}.txt</button>)}
 
-                                    </div>
+                                    </form>
                                     
                                 
                             )
                             )}
-                        </div>
-                        </div>
-                    </div>
+                            </div>
+                        </form>
+                    </section>
                 )}
-            </section>
+            
         </>
 
     );
