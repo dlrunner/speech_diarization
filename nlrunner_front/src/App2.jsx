@@ -1,7 +1,9 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef } from 'react';
 import logo from './logo.svg';
-import './App2.css'
+import './App2.css';
 import RecordingComponent from './RecordingComponent.jsx'; // 녹음 컴포넌트 임포트
+import Header from './layout/header';
+import Footer from './layout/footer';
 
 const App2 = () => {
     const [file, setFile] = useState(null);
@@ -18,30 +20,31 @@ const App2 = () => {
             setFile(file); // 파일 선택 시 상태 업데이트
         }
     };
+
     const handleSubmit = async (event) => {
         event.preventDefault();
-        
+
         if (!file) {
             alert('파일을 선택해주세요.');
             return;
         }
-    
+
         setIsLoading(true); // 로딩 시작
         const formData = new FormData();
         formData.append('file', file);
-    
+
         try {
             const response = await fetch('/api/uploadfile/', {
                 method: 'POST',
                 body: formData,
             });
-    
+
             if (!response.ok) {
                 throw new Error('파일 업로드 중 오류가 발생하였습니다.');
             }
-    
+
             const data = await response.json();
-            
+
             // data 객체에서 duration 필드가 있는지 확인 후 설정
             if (data.duration !== undefined) {
                 setDuration(data.duration.toFixed(1));
@@ -49,11 +52,11 @@ const App2 = () => {
                 // duration 필드가 없을 경우 처리
                 console.warn('서버 응답에 duration 필드가 없습니다.');
             }
-    
+
             // 나머지 필드들 설정
             setSpeakerTexts(data.speaker_texts);
             setFileName(data.org_filename);
-            
+
         } catch (error) {
             console.error('Error:', error);
             alert(error.message);
@@ -61,9 +64,10 @@ const App2 = () => {
             setIsLoading(false); // 로딩 종료
         }
     };
+
     const handleRecordingClick = () => {
         setIsRecording(true); // 녹음 상태로 전환
-      };
+    };
 
     const txtDownload = async (event, speakerId) => {
         event.preventDefault();
@@ -72,6 +76,7 @@ const App2 = () => {
             speaker_id: speakerId
         }
         const response = await fetch('/api/download_txt/', {
+
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -117,6 +122,7 @@ const App2 = () => {
 
     return (
         <>
+            <Header /> {/* Header 추가 */}
             <section className="image-section">
                 <figure className="image-container">
                     <img
@@ -131,9 +137,7 @@ const App2 = () => {
                 <div className="upload-container">
                     <h1 className="upload-title">오디오 파일을 업로드해주세요.</h1>
                     <form className="upload-form" onSubmit={handleSubmit}>
-                        {/* <button className="file-select-button" type="button">
-                            파일 선택
-                        </button> */}
+
                         <div className="file-info">
                             <label htmlFor="file-upload" className="visually-hidden">
                                 파일을 선택해주세요.
@@ -201,11 +205,10 @@ const App2 = () => {
                         </form>
                     </section>
                 )}
-            
+
         </>
 
     );
 };
 
-  
 export default App2;
