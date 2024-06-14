@@ -4,7 +4,17 @@ import "./App2.css";
 import RecordingComponent from "./RecordingComponent.jsx"; // 녹음 컴포넌트 임포트
 import Header from "./layout/header";
 import Footer from "./layout/footer";
+import Loader from "./components/Loader";
 import Accordion from "./components/Accordion.jsx";
+
+function FileCard({ imgSrc, alt, text }) {
+    return (
+      <section className="file-card">
+        <img loading="lazy" src={imgSrc} alt={alt} className="file-image" />
+        <div className="file-description">{text}</div>
+      </section>
+    );
+  }
 
 const App2 = () => {
   const [file, setFile] = useState(null);
@@ -13,6 +23,21 @@ const App2 = () => {
   const [duration, setDuration] = useState(null); // 소요시간 표시용
   const [fileName, setFileName] = useState(null);
   const [message, setMessage] = useState("");
+  
+  const files = [
+    {
+      imgSrc:
+        "https://cdn.builder.io/api/v1/image/assets/TEMP/8acf0177735b9653421f3b8d7f5f65d5e522bd6a5c732e3cb2963265a66fa00b?apiKey=9fb55b04424d4563a105428acb43ab19&",
+      alt: "텍스트 파일 이미지",
+      text: "텍스트 파일",
+    },
+    {
+      imgSrc:
+        "https://cdn.builder.io/api/v1/image/assets/TEMP/8acf0177735b9653421f3b8d7f5f65d5e522bd6a5c732e3cb2963265a66fa00b?apiKey=9fb55b04424d4563a105428acb43ab19&",
+      alt: "오디오 파일 이미지",
+      text: "오디오 파일",
+    },
+  ];
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -133,42 +158,74 @@ const App2 = () => {
       </section>
       <section className="upload-section">
         <div className="upload-container">
-          <h1 className="upload-title">오디오 파일을 업로드해주세요.</h1>
-          <form className="upload-form" onSubmit={handleSubmit}>
-            <div className="file-info">
-              <label htmlFor="file-upload" className="visually-hidden">
-                파일을 선택해주세요.
-              </label>
-              <input
-                type="file"
-                id="file-upload"
-                className="file-upload"
-                aria-label="파일을 선택해주세요."
-                onChange={handleFileChange}
-              />
-            </div>
-            <button
-              className="file-upload-button"
-              type="submit"
-              disabled={isLoading}
-            >
-              {isLoading ? "로딩 중..." : "파일 업로드"}
-              <img
-                loading="lazy"
-                src="https://cdn.builder.io/api/v1/image/assets/TEMP/5bdc71e24f35d3498f1329292db22aa237d7c5aff0a858505015132b023b2d40?apiKey=9fb55b04424d4563a105428acb43ab19&"
-                alt=""
-                className="upload-icon"
-              />
-            </button>
-          </form>
+          <h1 className="upload-title">
+            {isLoading
+              ? "오디오 필터링 중 기다려주세요!"
+              : "오디오 파일을 업로드 해주세요"}
+          </h1>
+          {isLoading ? (
+            <Loader />
+          ) : (
+            <form className="upload-form" onSubmit={handleSubmit}>
+              <button className="file-select-button">파일 선택</button>
+
+              <div className="file-info">
+                <label htmlFor="file-upload" className="visually-hidden">
+                  파일을 선택해주세요.
+                </label>
+                <input
+                  type="file"
+                  id="file-upload"
+                  className="file-upload"
+                  aria-label="파일을 선택해주세요."
+                  onChange={handleFileChange}
+                />
+              </div>
+              <button
+                className="file-upload-button"
+                type="submit"
+                disabled={isLoading}
+              >
+                {isLoading ? "로딩 중..." : "파일 업로드"}
+                <img
+                  loading="lazy"
+                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/5bdc71e24f35d3498f1329292db22aa237d7c5aff0a858505015132b023b2d40?apiKey=9fb55b04424d4563a105428acb43ab19&"
+                  alt=""
+                  className="upload-icon"
+                />
+              </button>
+            </form>
+          )}
         </div>
       </section>
       {/* 화자 분리 결과 및 다운로드 링크 표시 */}
-      {speakerTexts && (
+      {speakerTexts && !isLoading && (
         <section className="results-container">
+          <div className="results-header">화자 분리 결과</div>
+          <div className="results-bullet blink">•</div>
+          <div className="results-bullet dimmed">•</div>
+          <div className="results-bullet highlight">•</div>
+          <div className="results-duration">소요 시간: {duration}초</div>
+          <form className="container">
+            <div className="files-wrapper">
+              {files.map((file, index) => (
+                <FileCard
+                  key={index}
+                  imgSrc={file.imgSrc}
+                  alt={file.alt}
+                  text={file.text}
+                />
+              ))}
+            </div>
+          </form>
           <div>
             {Object.entries(speakerTexts).map((speakerId) => (
-              <Accordion key={speakerId} id={speakerId} txtDownload={txtDownload} wavDownload={wavDownload} />
+              <Accordion
+                key={speakerId}
+                id={speakerId}
+                txtDownload={txtDownload}
+                wavDownload={wavDownload}
+              />
             ))}
           </div>
         </section>
