@@ -8,13 +8,13 @@ import Loader from "./components/Loader";
 import Accordion from "./components/Accordion.jsx";
 
 function FileCard({ imgSrc, alt, text }) {
-    return (
-      <section className="file-card">
-        <img loading="lazy" src={imgSrc} alt={alt} className="file-image" />
-        <div className="file-description">{text}</div>
-      </section>
-    );
-  }
+  return (
+    <section className="file-card">
+      <img loading="lazy" src={imgSrc} alt={alt} className="file-image" />
+      <div className="file-description">{text}</div>
+    </section>
+  );
+}
 
 const App2 = () => {
   const [file, setFile] = useState(null);
@@ -23,7 +23,8 @@ const App2 = () => {
   const [duration, setDuration] = useState(null); // 소요시간 표시용
   const [fileName, setFileName] = useState(null);
   const [message, setMessage] = useState("");
-  
+  const [checkSpeaker, setCheckSpeaker] = React.useState(false);
+
   const files = [
     {
       imgSrc:
@@ -100,6 +101,7 @@ const App2 = () => {
       filename: fileName,
       speaker_id: speakerId,
     };
+
     const response = await fetch("/api/download_txt/", {
       method: "POST",
       headers: {
@@ -107,6 +109,7 @@ const App2 = () => {
       },
       body: JSON.stringify(downloadData),
     });
+
     const blob = await response.blob();
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement("a");
