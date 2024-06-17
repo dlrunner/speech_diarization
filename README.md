@@ -54,7 +54,5 @@ AI개발 과정, 미니프로젝트 코드입니다. Ai모델을 활용하여 "�
 -
 
 ### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
-"# nurim-plus-view" 
-"# nurim-plus-view" 
+ 
 
