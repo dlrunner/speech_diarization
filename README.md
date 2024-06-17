@@ -21,12 +21,12 @@ AI개발 과정, 미니프로젝트 코드입니다. Ai모델을 활용하여 "�
 - 발표평가
   
 ## 🧑‍🤝‍🧑 개발자 소개 
-- **우성빈** : 팀장, ai 개발자
+- **우성빈** : 팀장, ai 개발
 - **박광희** : 화면 구성
 - **이재준** : 화면 구성
 - **강윤지** : 백엔드 개발
 - **금현수** : 백엔드 개발
-- **백승용** : Git 관리, 코드 통합 
+- **백승용** : Git 관리, 코드 통합
 
 ## 💻 개발환경
 - **Version** : python(v.3.12), Node.js (v.20.14.0), Yarn (v.1.22.22), vite(v1.5.2)
@@ -43,9 +43,3 @@ AI개발 과정, 미니프로젝트 코드입니다. Ai모델을 활용하여 "�
 ## 📌 주요 기능
 - wav 파일을 받아 화자 분리
 - 화자 분리된 txt, wav 파일 다운로드
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
-"# nurim-plus-view" 
-"# nurim-plus-view" 
-
