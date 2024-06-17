@@ -47,9 +47,15 @@ const App2 = () => {
         }
     };
 
-    const handleDownloadAllTxt = async (event) => {
+    const handleDownloadAllTxt = async (event, index) => {
         
         event.preventDefault();
+        if (selectedIds.length === 0) {
+            
+            alert("다운로드할 데이터를 선택하세요.");
+            return; // 데이터가 없으면 함수를 종료합니다.
+        }
+
         try {
             
             const requestData = {
@@ -57,9 +63,14 @@ const App2 = () => {
                 , filename : fileName
             };
             
-            console.log("requestData :", requestData)
-
-            const response = await fetch('/api/download_all_txt/', {
+            let apiUrl = '';
+            if (index === 0) {
+                apiUrl = '/api/download_all_txt/';
+            } else {
+                apiUrl = '/api/download_all_wav/';
+            }
+            
+            const response = await fetch(apiUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -255,7 +266,7 @@ const App2 = () => {
                                     imgSrc={file.imgSrc}
                                     alt={file.alt}
                                     text={file.text}
-                                    onClick={handleDownloadAllTxt} //수정된 부분
+                                    onClick={(event) => handleDownloadAllTxt(event, index)} // index를 전달합니다.
                                 />
                             ))}
                         </div>

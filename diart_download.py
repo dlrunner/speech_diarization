@@ -79,3 +79,52 @@ async def download_txt_file(request: Request):
     print("combined_wav : " + combined_wav)
 
     return FileResponse(file_path, filename=combined_wav, media_type='audio/wav')
+
+@router.post("/download_all_wav/")
+async def download_all_wav(request: Request):
+
+    data = await request.json()
+
+    speaker_ids = data.get("selectedIds")
+    filename = data.get("filename")
+    upfile = filename.split("_")[0]
+
+    combind_wav_dirs = f"combind_wav/{filename}"
+    if not os.path.exists(combind_wav_dirs):
+        os.makedirs(combind_wav_dirs)
+
+    base_path = os.path.join("file_segments", f"{filename}_segments")
+
+    # Create a list of combined wav files for each speaker ID
+    combined_files = []
+    for speaker_id in speaker_ids:
+        file_list = glob.glob(f"{base_path}/SPEAKER_{speaker_id}*.wav")
+        if not file_list:
+            continue
+
+        wavs = [AudioSegment.from_wav(wav) for wav in file_list]
+        combined = wavs[0]
+        for wav in wavs[1:]:
+            combined = combined.append(wav)
+        
+        combined_wav = f"{upfile}_{speaker_id}.wav"
+        file_path = os.path.join(combind_wav_dirs, combined_wav)
+        combined.export(file_path, format="wav")
+        combined_files.append(file_path)
+
+    # Create a temporary directory to store the compressed files
+    with NamedTemporaryFile(delete=False) as temp_zip_file:
+        with zipfile.ZipFile(temp_zip_file, 'w') as zip_file:
+            for combined_file in combined_files:
+                if os.path.exists(combined_file):
+                    zip_file.write(combined_file, arcname=os.path.basename(combined_file))
+
+    # Open the temporary zip file in read-binary mode and return it as a StreamingResponse
+    with open(temp_zip_file.name, 'rb') as file:
+        file_content = file.read()
+
+    return StreamingResponse(
+        iter([file_content]),
+        media_type="application/zip",
+        headers={"Content-Disposition": f"attachment; filename={filename}.zip"}
+    )
