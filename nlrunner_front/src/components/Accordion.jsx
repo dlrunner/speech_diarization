@@ -30,6 +30,7 @@ const Accordion = ({ id, texts, txtDownload, wavDownload, files , selectedIds, s
           disabled={disabled}
           checked={checked}
           onChange={onChange}         // onChange 이벤트 핸들러에 직접 전달
+          onClick={(e) => e.stopPropagation()} // 클릭 이벤트 상위로 전파 방지
         />
         {children}
       </label>

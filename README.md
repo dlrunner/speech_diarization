@@ -13,6 +13,10 @@ AI개발 과정, 미니프로젝트 코드입니다. Ai모델을 활용하여 "�
 ## 👨‍🏫 프로젝트 소개
 "회의나 강의를 녹음하여 원하는 화자의 내용을 듣거나 보고싶은 분들 또는 청각이 불편한 분들까지 유용하게 사용할 수 있는 서비스 입니다."
 
+## 🎥 실행 화면
+![nlrunner](https://github.com/dlrunner/speech_diarization/assets/159866148/61e6a9d1-dff5-43df-8c14-30dd31aba854)
+
+
 ## ⏲️ 개발 기간 
 - 2024.06.10(월) ~ 2024.06.18(화)
 - 아이디어의 이해
@@ -38,7 +42,6 @@ AI개발 과정, 미니프로젝트 코드입니다. Ai모델을 활용하여 "�
 - **ASGI Server**: Uvicorn
 - **Version Control**: Git
 - **아이디어 회의** : Jira, Notion, Zoom
-- ![image](https://github.com/dlrunner/speech_diarization/assets/159866148/305204df-5661-4f1d-9563-f910c841279d)
 
 
 ## 📝 프로젝트 아키텍쳐
