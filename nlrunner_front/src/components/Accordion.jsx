@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import "./Accordion.css"; // 스타일링을 위한 CSS 파일
 
-const Accordion = ({ id, texts, txtDownload, wavDownload,files }) => {
-  // console.log("id" + id);
+const Accordion = ({ id, texts, txtDownload, wavDownload, files, selectedIds, setSelectedIds }) => {
 
   const [isOpen, setIsOpen] = useState(false);
   const [checkSpeaker, setCheckSpeaker] = React.useState(false);
+  const [speakerIds, setSpeakerIds] = useState([]);
 
   const toggleAccordion = () => {
     setIsOpen(!isOpen);
@@ -29,18 +29,43 @@ const Accordion = ({ id, texts, txtDownload, wavDownload,files }) => {
           type="checkbox"
           disabled={disabled}
           checked={checked}
-          onChange={({ target: { checked } }) => onChange(checked)}
+          onChange={onChange}         // onChange 이벤트 핸들러에 직접 전달
         />
         {children}
       </label>
     );
   }
 
+  const handleCheckboxChange = (event) => {
+    const isChecked = event.target.checked;
+    setCheckSpeaker(isChecked); // 체크박스 상태를 업데이트
+    if (isChecked) {
+        //체크박스가 선택되면 해당 스피커 아이디를 리스트에 추가
+        setSpeakerIds([...speakerIds, id]);
+    } else {
+        //체크박스가 해제되면 해당 스피커 아이디를 리스트에서 제거
+        setSpeakerIds(speakerIds.filter((selectedId) => selectedId !== id));
+    }
+
+    //이전 상태를 참조하지 않고 업데이트된 상태를 확인하려면 상태 업데이트 콜백 함수 사용
+    setCheckSpeaker(isChecked => {
+        return isChecked;
+    });
+
+    setSpeakerIds(speakerIds => {
+        return speakerIds;
+    });
+};
+
   return (
     <>
       <div className="accordion">
         <div className="accordion-header" onClick={toggleAccordion}>
-          <Checkbox checked={checkSpeaker} onChange={setCheckSpeaker} />
+          <Checkbox
+            checked={checkSpeaker}                            //checkSpeaker 상태를 checked 속성으로 전달
+            onChange={(event) => handleCheckboxChange(event)} //handleCheckboxChange 함수를 onChange로 설정
+          >
+          </Checkbox>
           <h3>SPEAKER {id}</h3>
           <span className={isOpen ? "open" : ""}>{isOpen ? "▼" : "▼"}</span>
         </div>
@@ -58,12 +83,12 @@ const Accordion = ({ id, texts, txtDownload, wavDownload,files }) => {
                     alt={file.alt}
                     text={file.text}
                     onClick={(event) => {
-                        if (index === 0) {
-                            txtDownload(event, id); //1.텍스트 다운로드 함수 호출
-                        } else if (index === 1) {
-                            wavDownload(event, id); //2.영상 다운로드 함수 호출
-                        }
-                    }}
+                      if (index === 0) {
+                          txtDownload(event, id); //1.텍스트 다운로드 함수 호출
+                      } else if (index === 1) {
+                          wavDownload(event, id); //2.영상 다운로드 함수 호출
+                      }
+                  }}
                 />
               ))}
             </div>
