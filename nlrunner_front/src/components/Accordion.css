@@ -1,15 +1,14 @@
 /* 기본 스타일 */
 .accordion {
-  border: 1px solid #ccc;
-  border-radius: 4px;
   margin: 10px 0;
   overflow: hidden;
-  transition: box-shadow 0.3s;
+  box-shadow: 5px 5px 10px rgba(170,170, 204, 0.25), 10px 10px 20px rgba(170, 170, 204, 0.5);
+  border-radius: 1rem;
 }
 
-.accordion:hover {
+/* .accordion:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
+} */
 
 /* 헤더 스타일 */
 .accordion-header {
@@ -21,12 +20,15 @@
   justify-content: space-between;
   align-items: center;
   transition: background-color 0.3s;
-  border-radius: 42px;
-  box-shadow: 0 4px 8px #dacaf5;
+  border-radius: 1rem;
+  /*! box-shadow: 0 4px 8px #dacaf5; */
+  /* min-width: 70rem; */
+  box-shadow: 5px 5px 10px rgba(170,170, 204, 0.25), 10px 10px 20px rgba(170, 170, 204, 0.5);
 }
 
 .accordion-header:hover {
-  background-color: #d2bcff; /* 연보라색 */
+  background-color: #7030c1; /* 연보라색 */
+  color: white;
 }
 
 /* 헤더 제목 스타일 */
@@ -39,8 +41,11 @@
 .accordion-content {
   padding: 15px 20px;
   border-top: 1px solid #ccc;
-  background-color: #e7d9ff; /* 연한 보라색 */
+  background-color: #fff; /* 연한 보라색 */
   animation: fadeIn 0.3s;
+  border-radius: 1rem;
+  box-shadow: 10px 10px 10px rgba(170,170, 204, 0.25), 10px 10px 20px rgba(170, 170, 204, 0.5);
+  color: black;
 }
 
 /* 아이콘 스타일 */
@@ -62,3 +67,7 @@
     opacity: 1;
   }
 }
+li {
+  margin: 1rem 2rem;
+}
+
