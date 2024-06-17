@@ -14,7 +14,8 @@ AI개발 과정, 미니프로젝트 코드입니다. Ai모델을 활용하여 "�
 "회의나 강의를 녹음하여 원하는 화자의 내용을 듣거나 보고싶은 분들 또는 청각이 불편한 분들까지 유용하게 사용할 수 있는 서비스 입니다."
 
 ## 🎥 실행 화면
-![nlrunner](https://github.com/dlrunner/speech_diarization/assets/159866148/61e6a9d1-dff5-43df-8c14-30dd31aba854)
+![ezgif-2-e08c37b2ce](https://github.com/dlrunner/speech_diarization/assets/159866148/8b133f1e-3919-4a02-abb1-d9b3edd7fccf)
+![ezgif-2-44a9fd1d43](https://github.com/dlrunner/speech_diarization/assets/159866148/4d2410e5-8e1e-414c-bf9c-dc948d297987)
 
 
 ## ⏲️ 개발 기간 
