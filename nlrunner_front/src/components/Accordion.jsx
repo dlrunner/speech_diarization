@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Accordion.css"; // 스타일링을 위한 CSS 파일
 
-const Accordion = ({ id, texts, txtDownload, wavDownload, files, selectedIds, setSelectedIds }) => {
+const Accordion = ({ id, texts, txtDownload, wavDownload, files , selectedIds, setSelectedIds }) => {
 
   const [isOpen, setIsOpen] = useState(false);
-  const [checkSpeaker, setCheckSpeaker] = React.useState(false);
+  const [checkSpeaker, setCheckSpeaker] = useState(false);
   const [speakerIds, setSpeakerIds] = useState([]);
 
   const toggleAccordion = () => {
@@ -39,23 +39,21 @@ const Accordion = ({ id, texts, txtDownload, wavDownload, files, selectedIds, se
   const handleCheckboxChange = (event) => {
     const isChecked = event.target.checked;
     setCheckSpeaker(isChecked); // 체크박스 상태를 업데이트
-    if (isChecked) {
-        //체크박스가 선택되면 해당 스피커 아이디를 리스트에 추가
-        setSpeakerIds([...speakerIds, id]);
-    } else {
-        //체크박스가 해제되면 해당 스피커 아이디를 리스트에서 제거
-        setSpeakerIds(speakerIds.filter((selectedId) => selectedId !== id));
-    }
-
-    //이전 상태를 참조하지 않고 업데이트된 상태를 확인하려면 상태 업데이트 콜백 함수 사용
-    setCheckSpeaker(isChecked => {
-        return isChecked;
+    setSelectedIds((prevSelectedIds) => {
+        if (isChecked) {
+            // 체크박스가 선택된 경우 해당 스피커 아이디를 리스트에 추가하여 반환
+            return [...prevSelectedIds, id];
+        } else {
+            // 체크박스가 해제된 경우 해당 스피커 아이디를 리스트에서 제거하여 반환
+            return prevSelectedIds.filter((selectedId) => selectedId !== id);
+        }
     });
+  };
 
-    setSpeakerIds(speakerIds => {
-        return speakerIds;
-    });
-};
+  // useEffect를 사용하여 selectedIds 상태가 변경될 때마다 실행되는 로그 출력
+  useEffect(() => {
+    // console.log("selectedIds:", selectedIds);
+  }, [selectedIds]);
 
   return (
     <>
