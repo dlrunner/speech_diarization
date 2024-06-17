@@ -9,10 +9,11 @@ import Accordion from "./components/Accordion.jsx";
 import Title from "./title/Title.jsx";
 
 
-function FileCard({ imgSrc, alt, text }) {
+//텍스트, 비디오 전체 버튼관련 function
+function FileCard({ imgSrc, alt, text, onClick }) {
     return (
         <section className="file-card">
-            <button className="file-download-button">
+            <button className="file-download-button" onClick={onClick}>
                 <img loading="lazy" src={imgSrc} alt={alt} className="file-image" />
                 <div className="file-description">{text}</div>
             </button>
@@ -30,6 +31,7 @@ const App2 = () => {
     const [checkSpeaker, setCheckSpeaker] = useState(false);
     const fileInputRef = useRef(null);
     const [size, setSize] = useState(12);
+    const [selectedIds, setSelectedIds] = useState([]); // App2.jsx 파일 내부에 추가
 
     const files = [
         { imgSrc: "https://cdn.builder.io/api/v1/image/assets/TEMP/8acf0177735b9653421f3b8d7f5f65d5e522bd6a5c732e3cb2963265a66fa00b?apiKey=9fb55b04424d4563a105428acb43ab19&", alt: "텍스트 파일 이미지", text: "텍스트 파일" },
@@ -42,6 +44,62 @@ const App2 = () => {
             console.log('Selected file:', file.name);
             setFile(file); // 파일 선택 시 상태 업데이트
             setFileName(file.name); // 파일 이름 설정
+        }
+    };
+
+    const handleDownloadAllTxt = async (event, index) => {
+        
+        event.preventDefault();
+        if (selectedIds.length === 0) {
+            
+            alert("다운로드할 데이터를 선택하세요.");
+            return; // 데이터가 없으면 함수를 종료합니다.
+        }
+
+        try {
+            
+            const requestData = {
+                  selectedIds: selectedIds // 혹은 다른 변수에 저장된 데이터를 사용할 수 있음
+                , filename : fileName
+            };
+            
+            let apiUrl = '';
+            if (index === 0) {
+                apiUrl = '/api/download_all_txt/';
+            } else {
+                apiUrl = '/api/download_all_wav/';
+            }
+            
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+                  //필요한 데이터가 있다면 body에 추가
+                , body: JSON.stringify(requestData) //데이터를 JSON 문자열로 변환하여 전달
+            });
+    
+            if (!response.ok) {
+                throw new Error('압축 파일을 다운로드하는 동안 오류가 발생했습니다.');
+            }
+    
+            // 응답에서 blob 데이터를 가져옴
+            const blob = await response.blob();
+    
+            // Blob 데이터를 URL로 변환하여 링크 생성
+            const url = window.URL.createObjectURL(blob);
+    
+            // 링크 생성 및 다운로드
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'downloaded_files.zip';
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            window.URL.revokeObjectURL(url);
+        } catch (error) {
+            console.error('Error:', error);
+            // 오류 처리
         }
     };
 
@@ -90,6 +148,7 @@ const App2 = () => {
     };
 
     const txtDownload = async (event, speakerId) => {
+
         event.preventDefault();
         const downloadData = {
             filename: fileName,
@@ -202,7 +261,13 @@ const App2 = () => {
                     <form className="container">
                         <div className="files-wrapper">
                             {files.map((file, index) => (
-                                <FileCard key={index} imgSrc={file.imgSrc} alt={file.alt} text={file.text} />
+                                <FileCard 
+                                    key={index}
+                                    imgSrc={file.imgSrc}
+                                    alt={file.alt}
+                                    text={file.text}
+                                    onClick={(event) => handleDownloadAllTxt(event, index)} // index를 전달합니다.
+                                />
                             ))}
                         </div>
                     </form>
@@ -216,6 +281,8 @@ const App2 = () => {
                             txtDownload={txtDownload}
                             wavDownload={wavDownload}
                             files={files}
+                            selectedIds={selectedIds} // 수정된 부분
+                            setSelectedIds={setSelectedIds} // 수정된 부분
                         />
                         ))}
                     </div>
