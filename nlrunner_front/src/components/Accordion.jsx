@@ -11,10 +11,11 @@ const Accordion = ({ id, texts, txtDownload, wavDownload,files }) => {
     setIsOpen(!isOpen);
   };
 
-  function FileCard({ imgSrc, alt, text }) {
+  //55 line에서 호출 됨. 
+  function FileCard({ imgSrc, alt, text, onClick }) {
     return (
         <section className="file-card">
-            <button className="file-download-button">
+            <button className="file-download-button" onClick={onClick}>
                 <img loading="lazy" src={imgSrc} alt={alt} className="file-image" />
                 <div className="file-description">{text}</div>
             </button>
@@ -51,7 +52,12 @@ const Accordion = ({ id, texts, txtDownload, wavDownload,files }) => {
             {/* <div className="download-buttons-2"> */}
             <div className="files-wrapper-2">
                             {files.map((file, index) => (
-                                <FileCard key={index} imgSrc={file.imgSrc} alt={file.alt} text={file.text} />
+                                <FileCard key={index} 
+                                          imgSrc={file.imgSrc} 
+                                          alt={file.alt} 
+                                          text={file.text} 
+                                          onClick={(event) => txtDownload(event, id)}
+                                          />
                             ))}
 
               {/* <button

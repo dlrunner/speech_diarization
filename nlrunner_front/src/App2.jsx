@@ -9,6 +9,7 @@ import Accordion from "./components/Accordion.jsx";
 import Title from "./title/Title.jsx";
 
 
+//텍스트, 비디오 전체 버튼관련 function
 function FileCard({ imgSrc, alt, text }) {
     return (
         <section className="file-card">
@@ -90,6 +91,7 @@ const App2 = () => {
     };
 
     const txtDownload = async (event, speakerId) => {
+
         event.preventDefault();
         const downloadData = {
             filename: fileName,
