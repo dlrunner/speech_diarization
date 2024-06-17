@@ -21,38 +21,34 @@ AI개발 과정, 미니프로젝트 코드입니다. Ai모델을 활용하여 "�
 - 아이디어 노트 작성
 - 코딩
 - 아이디어 발표
-- 
 - 발표평가
   
 ## 🧑‍🤝‍🧑 개발자 소개 
-- **우성빈** : 팀장, Server 개발자
-- **박광희** : 데이터 분석
-- **이재준** : 데이터 분석
-- **강윤지** : Android 개발자
-- **금현수** : UX UI Designer
-- **백승용** : Android 개발자
-  
-![개발자 소개]
+- **우성빈** : 팀장, ai 개발자
+- **박광희** : 화면 구성
+- **이재준** : 화면 구성
+- **강윤지** : 백엔드 개발
+- **금현수** : 백엔드 개발
+- **백승용** : Git 관리, 코드 통합 
 
 ## 💻 개발환경
-- **Version** : python 3.12
-- **IDE** : IntelliJ, vue.js
-- **Framework** : SpringBoot3
-- **ORM** : JPA
+- **Version** : python(v.3.12), Node.js (v.20.14.0), Yarn (v.1.22.22)
+- **IDE** : Visual Studio Code
+- **Framework** : Frond-end: React(Vite), Back-end: Fast-api
 
 ## ⚙️ 기술 스택
-- **Server** : AWS EC3
-- **DataBase** : AWS RDS, Datagrip, JPQL, ERD AqueryTool
-- **WS/WAS** : Nginx, Tomcat
-- **OCR** : AWS Textract, AWS S3
-- **아이디어 회의** : Slack, Zoom, Notion
+- **Server** : Uvicorn
+- **아이디어 회의** : Jira, Notion, Zoom
 
 ## 📝 프로젝트 아키텍쳐
 
 
 ## 📌 주요 기능
--
+- wav 파일을 받아 화자 분리
+- 화자 분리된 txt, wav 파일 다운로드
 
 ### Customize configuration
- 
+See [Configuration Reference](https://cli.vuejs.org/config/).
+"# nurim-plus-view" 
+"# nurim-plus-view" 
 
