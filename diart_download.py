@@ -27,28 +27,30 @@ async def download_txt_file(request: Request):
 @router.post("/download_all_txt/")
 async def download_all_txt(request: Request):
     
-    print("선택 전체 다운로드")
     data = await request.json()
 
-    speaker_ids = data.get("selectedIds") #data.get("speaker_ids")
-    filenames   = speaker_ids
-    scripts_txt_dir = "scripts_text"
+    speaker_ids = data.get("selectedIds")
+    filename    = data.get("filename")
+    scripts_txt_dir = os.path.join("scripts_text", filename)
+    upfile = filename.split("_")[0]
+    textfiles = [f"{upfile}_{speaker_id}.txt" for speaker_id in speaker_ids]
 
-    # Create a temporary directory to store the compressed files
+     # Create a temporary directory to store the compressed files
     with NamedTemporaryFile(delete=False) as temp_zip_file:
         with zipfile.ZipFile(temp_zip_file, 'w') as zip_file:
-            for filename in filenames:
-                for speaker_id in speaker_ids:
-                    textfile = f"{filename.split('_')[0]}_{speaker_id}.txt"
-                    file_path = os.path.join(scripts_txt_dir, filename, textfile)
-                    if os.path.exists(file_path):
-                        zip_file.write(file_path, arcname=textfile)
+            for textfile in textfiles:
+                file_path = os.path.join(scripts_txt_dir, textfile)
+                if os.path.exists(file_path):
+                    zip_file.write(file_path, arcname=textfile)
 
     # Open the temporary zip file in read-binary mode and return it as a StreamingResponse
+    with open(temp_zip_file.name, 'rb') as file:
+        file_content = file.read()
+
     return StreamingResponse(
-        iter([temp_zip_file]),
+        iter([file_content]),
         media_type="application/zip",
-        headers={"Content-Disposition": "attachment; filename=downloaded_files.zip"}
+        headers={"Content-Disposition": f"attachment; filename={filename}.zip"}
     )
 
 @router.post("/download_wav/")

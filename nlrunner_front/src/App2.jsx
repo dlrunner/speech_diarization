@@ -50,12 +50,11 @@ const App2 = () => {
     const handleDownloadAllTxt = async (event) => {
         
         event.preventDefault();
-    
-        
         try {
             
             const requestData = {
-                selectedIds: selectedIds // 혹은 다른 변수에 저장된 데이터를 사용할 수 있음
+                  selectedIds: selectedIds // 혹은 다른 변수에 저장된 데이터를 사용할 수 있음
+                , filename : fileName
             };
             
             console.log("requestData :", requestData)
