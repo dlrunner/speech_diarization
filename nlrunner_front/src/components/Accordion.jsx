@@ -51,27 +51,21 @@ const Accordion = ({ id, texts, txtDownload, wavDownload,files }) => {
             ))}
             {/* <div className="download-buttons-2"> */}
             <div className="files-wrapper-2">
-                            {files.map((file, index) => (
-                                <FileCard key={index} 
-                                          imgSrc={file.imgSrc} 
-                                          alt={file.alt} 
-                                          text={file.text} 
-                                          onClick={(event) => txtDownload(event, id)}
-                                          />
-                            ))}
-
-              {/* <button
-                className="txt-download-button"
-                onClick={(event) => txtDownload(event, id)}
-              >
-                SPEAKER {id}.txt
-              </button>
-              <button
-                className="wav-download-button"
-                onClick={(event) => wavDownload(event, id)}
-              >
-                SPEAKER {id}.wav
-              </button> */}
+              {files.map((file, index) => (
+                <FileCard
+                    key={index}
+                    imgSrc={file.imgSrc}
+                    alt={file.alt}
+                    text={file.text}
+                    onClick={(event) => {
+                        if (index === 0) {
+                            txtDownload(event, id); //1.텍스트 다운로드 함수 호출
+                        } else if (index === 1) {
+                            wavDownload(event, id); //2.영상 다운로드 함수 호출
+                        }
+                    }}
+                />
+              ))}
             </div>
           </div>
         )}
