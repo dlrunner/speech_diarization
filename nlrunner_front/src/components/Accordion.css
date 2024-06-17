@@ -15,7 +15,7 @@
   background-color: #fff; /* 보라색 */
   color: #000000;
   padding: 15px 20px;
-  cursor: pointer;
+  /* cursor: pointer; */
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -24,6 +24,16 @@
   /*! box-shadow: 0 4px 8px #dacaf5; */
   /* min-width: 70rem; */
   box-shadow: 5px 5px 10px rgba(170,170, 204, 0.25), 10px 10px 20px rgba(170, 170, 204, 0.5);
+}
+/* 화살표 부분만 포인터 커서 적용 */
+.accordion-header span {
+  font-size: 1.5em;
+  transition: transform 0.3s;
+  cursor: pointer; /* 여기에서 포인터 커서를 추가 */
+}
+
+.accordion-header span.open {
+  transform: rotate(180deg);
 }
 
 .accordion-header:hover {
