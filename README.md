@@ -38,7 +38,8 @@ AI개발 과정, 미니프로젝트 코드입니다. Ai모델을 활용하여 "�
 - **ASGI Server**: Uvicorn
 - **Version Control**: Git
 - **아이디어 회의** : Jira, Notion, Zoom
-- ![image](https://github.com/dlrunner/speech_diarization/assets/159866148/305204df-5661-4f1d-9563-f910c841279d)
+[image](https://github.com/dlrunner/speech_diarization/assets/159866148/03743e90-dfa1-4ccb-8277-6edbd953b76c)
+
 
 
 ## 📝 프로젝트 아키텍쳐
