@@ -6,12 +6,16 @@ import Header from './layout/header';
 import Footer from './layout/footer';
 import Loader from './components/Loader';
 import Accordion from "./components/Accordion.jsx";
+import Title from "./title/Title.jsx";
+
 
 function FileCard({ imgSrc, alt, text }) {
     return (
         <section className="file-card">
-            <img loading="lazy" src={imgSrc} alt={alt} className="file-image" />
-            <div className="file-description">{text}</div>
+            <button className="file-download-button">
+                <img loading="lazy" src={imgSrc} alt={alt} className="file-image" />
+                <div className="file-description">{text}</div>
+            </button>
         </section>
     );
 }
@@ -25,6 +29,7 @@ const App2 = () => {
     const [message, setMessage] = useState('');
     const [checkSpeaker, setCheckSpeaker] = useState(false);
     const fileInputRef = useRef(null);
+    const [size, setSize] = useState(12);
 
     const files = [
         { imgSrc: "https://cdn.builder.io/api/v1/image/assets/TEMP/8acf0177735b9653421f3b8d7f5f65d5e522bd6a5c732e3cb2963265a66fa00b?apiKey=9fb55b04424d4563a105428acb43ab19&", alt: "텍스트 파일 이미지", text: "텍스트 파일" },
@@ -138,16 +143,8 @@ const App2 = () => {
     return (
         <>
             <Header /> {/* Header 추가 */}
-            <section className="image-section">
-                <figure className="image-container">
-                    <img
-                        loading="lazy"
-                        src="https://cdn.builder.io/api/v1/image/assets/TEMP/24c9bd176a5e8d8ca0b7b01d2704455bd5337f5d6c5180375bd3f24b58abf342?apiKey=9fb55b04424d4563a105428acb43ab19&"
-                        alt="Description of the image"
-                        className="main-image"
-                    />
-                </figure>
-            </section>
+            <Title />
+
             <section className="upload-section">
                 <div className="upload-container">
                     <h1 className="upload-title">{isLoading ? '오디오 필터링 중 기다려주세요!' : '오디오 파일을 업로드 해주세요'}</h1>
@@ -210,13 +207,15 @@ const App2 = () => {
                         </div>
                     </form>
 
-                    <div>
-                        {Object.entries(speakerTexts).map((speakerId) => (
+                    <div className='accordians'>
+                        {Object.keys(speakerTexts).map((speakerId) => (
                         <Accordion
                             key={speakerId}
                             id={speakerId}
+                            texts={speakerTexts}
                             txtDownload={txtDownload}
                             wavDownload={wavDownload}
+                            files={files}
                         />
                         ))}
                     </div>
