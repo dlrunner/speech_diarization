@@ -34,7 +34,11 @@ AI개발 과정, 미니프로젝트 코드입니다. Ai모델을 활용하여 "�
 - **Framework** : Frond-end: React(Vite), Back-end: Fast-api
 
 ## ⚙️ 기술 스택
-- **Server** : Uvicorn
+- **Backend Framework**: FastAPI
+- **ASGI Server**: Uvicorn
+- **Frontend**: React
+- **Version Control**: Git
+- **IDE**: VS Code
 - **아이디어 회의** : Jira, Notion, Zoom
 - ![image](https://github.com/dlrunner/speech_diarization/assets/159866148/305204df-5661-4f1d-9563-f910c841279d)
 
