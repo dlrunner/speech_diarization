@@ -74,17 +74,18 @@ async def create_upload_file(file: UploadFile):
         line = line.replace('\r','').replace('\n','')
         line_arr = line.split(' ')
 
-        seg_start = int(line_arr[3].replace('.',''))
+        seg_start   = int(line_arr[3].replace('.',''))
         seg_duration = int(line_arr[4].replace('.',''))
         seg_speaker = line_arr[7]
-        seg_end = seg_start + seg_duration
+        seg_end     = seg_start + seg_duration
         
-        audio_segment_file_name = os.path.join(output_folder, seg_speaker + "_" + str(seg_start) + ".wav")
+        audio_segment_file_name = os.path.join(output_folder, seg_speaker + "_" + str(seg_start) + "_" + str(seg_end) + ".wav")
 
         audio2 = audio_segment[seg_start:seg_end]
         audio2.export(audio_segment_file_name, format="wav")
 
-    speaker_texts = {}    # 화자별 텍스트 저장을 위한 딕셔너리 초기화
+    speaker_texts      = {}    # 화자별 텍스트 저장을 위한 딕셔너리 초기화
+    speaker_time_texts = {}    # 화자별 대화 시간 저장을 위한 딕셔너리 초기화
     file_list = [f for f in os.listdir(output_folder) if f.endswith(".wav")]    # 세그먼트 파일 목록 가져오기
     print(file_list)
 
@@ -93,18 +94,31 @@ async def create_upload_file(file: UploadFile):
     
     for file_name in file_list: # 각 파일에 대해 음성 인식 수행
         
-        speaker_id = file_name.split('_')[1]    # 화자 ID 추출 (예: "SPEAKER_00_31.wav"에서 00 추출)
+        speaker_id     = file_name.split('_')[1]    # 화자 ID 추출 (예: "SPEAKER_00_31.wav"에서 00 추출)
+        seg_start_time = int(file_name.split('_')[2].split('.')[0])  # 시작 시간 추출 (ms 단위)
+        seg_end_time   = int(file_name.split('_')[3].split('.')[0])  # 시작 시간 추출 (ms 단위)
         
         if speaker_id not in speaker_texts: # 화자 ID에 해당하는 텍스트 리스트가 없으면 초기화
-            speaker_texts[speaker_id] = []        
+            speaker_texts[speaker_id]      = []   
+            speaker_time_texts[speaker_id] = []    
         
         file_path = os.path.join(output_folder, file_name)  # 오디오 파일 경로 설정
         
         with sr.AudioFile(file_path) as source: # 오디오 파일을 읽고 음성 인식 수행
             audio = r.listen(source)
             try:
-                text = r.recognize_google(audio, language='ko')
+                
+                start_min, start_sec = divmod(seg_start_time / 1000, 60)  # 시작 시간을 분과 초로 변환
+                end_min, end_sec = divmod(seg_end_time / 1000, 60)        # 종료 시간을 분과 초로 변환
+            
+                # 출력 형식에 맞게 시작 시간과 종료 시간을 문자열로 조합
+                start_time_str = f"{int(start_min):02d}:{int(start_sec):02d}"
+                end_time_str   = f"{int(end_min):02d}:{int(end_sec):02d}"
+            
+                text      = f"{start_time_str} - {end_time_str} : {r.recognize_google(audio, language='ko')}"
+                time_text = f"{start_time_str} - {end_time_str}" 
                 speaker_texts[speaker_id].append(text)
+                speaker_time_texts[speaker_id].append(time_text)
                 print(f"화자 {speaker_id}: {text}")
             except sr.UnknownValueError:
                 print(f"화자 {speaker_id}: 인식 불가")
@@ -115,8 +129,9 @@ async def create_upload_file(file: UploadFile):
     # speaker_dir_name = os.path.join(speaker_dirs, org_filename + "_dict.pickle")
     # joblib.dump(speaker_texts, speaker_dir_name)
 
+    print("speaker_time_texts : " , speaker_time_texts)
     selected_speaker = []
-        # 화자별 텍스트 파일로 저장
+    # 화자별 텍스트 파일로 저장
     for speaker_id, texts in speaker_texts.items():
         selected_speaker.append(speaker_id)
         speaker_text_file = os.path.join(speaker_scripts_dir, f"{upload_filename}_{speaker_id}.txt")
@@ -128,9 +143,10 @@ async def create_upload_file(file: UploadFile):
     print("duration(sec) :", duration)
 
     response_data = {
-        "org_filename": org_filename,   # 원본파일명_타임스탬프.wav
-        "speaker_texts": speaker_texts, # {화자 코드 : 내용}
-        "duration": duration            # 소요시간
+          "org_filename"  : org_filename       # 원본파일명_타임스탬프.wav
+        , "speaker_texts" : speaker_texts      # {화자 코드 : 내용}
+        , "duration"      : duration           # 소요시간
+        , "elapsed_time"  : speaker_time_texts # 화자 대화 출력 시간
     }
 
     return JSONResponse(content=response_data)
