@@ -1,3 +1,7 @@
+<div style="text-align: center;">
+	<img src="https://capsule-render.vercel.app/api?type=waving&color=auto&height=200&section=header&text=NlRunner-Team!&fontSize=90"  alt=""/>	
+</div>
+
 ## speech_diarization 
 
 1. speech(.wav)를 참고하여 rttm 파일에 화자 분류 데이터 저장
