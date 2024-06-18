@@ -71,7 +71,7 @@ const Accordion = ({ id, texts, txtDownload, wavDownload, files , selectedIds, s
         {isOpen && (
           <div className="accordion-content">
             {texts[id].map((text, index) => (
-              <li key={index}>{text}</li>
+              <ol key={index}>{text}</ol>
             ))}
             {/* <div className="download-buttons-2"> */}
             <div className="files-wrapper-2">
