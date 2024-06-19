@@ -24,17 +24,20 @@ router = APIRouter()
 async def create_upload_file(file: UploadFile):
     
     start = time.time()
-    upload_filename = file.filename.split(".")[0]
-    org_filename = upload_filename + '_' + str(round(time.time())) # 파일명에 타임스탬프 추가
-    # print("filename : " + upload_filename)
+    
+    # output 데이터를 저장할 경로 설정.
+    upload_filename     = file.filename.split(".")[0]                               # 확장자 기준으로 파일명 추출
+    org_filename        = upload_filename + '_' + str(round(time.time()))           # 파일명에 타임스탬프 추가 : 같은 파일을 테스트 하더라도 덮어쓰지 않기 위해.
+    # print("filename     : " + upload_filename)
     # print("org_filename : " + org_filename)
-    file_segments = "file_segments" # 분할된 음성파일 저장 디렉터리
-    output_folder = os.path.join(file_segments, org_filename + "_segments")    # file_segments/파일명_segments/
-    rttm_dirs = "rttm_dirs" # rttm 파일 저장 디렉터리
-    speaker_dirs = "speaker_dirs" # pickle 파일 저장 디렉터리
-    scripts_txt_dir = "scripts_text"  # text 파일 저장 디렉터리
+    file_segments       = "file_segments"                                           # 분할된 음성파일을 저장할 디렉터리
+    output_folder       = os.path.join(file_segments, org_filename + "_segments")   # file_segments/파일명_segments/
+    rttm_dirs           = "rttm_dirs"                                               # rttm 파일 저장 디렉터리
+    speaker_dirs        = "speaker_dirs"                                            # pickle 파일 저장 디렉터리
+    scripts_txt_dir     = "scripts_text"                                            # text 파일 저장 디렉터리
     speaker_scripts_dir = os.path.join(scripts_txt_dir, org_filename)
 
+    # 앞서 설정한 경로 부재 시 생성.
     if not os.path.exists(file_segments):
         os.makedirs(file_segments)
         
@@ -53,9 +56,9 @@ async def create_upload_file(file: UploadFile):
     if not os.path.exists(speaker_scripts_dir):
             os.makedirs(speaker_scripts_dir)
 
-    byte_file = await file.read()
-    audio = io.BytesIO(byte_file)
-    diarization = pipeline(audio)  
+    byte_file   = await file.read()                                                 # wav 파일을 byte 데이터로 읽어 변환 함.
+    audio       = io.BytesIO(byte_file)                                             # 읽어온 byte 데이터를 audio 데이터로 변환
+    diarization = pipeline(audio)                                                   # AI 모델에 데이터 전달.  
 
     rttm_name = os.path.join(rttm_dirs, org_filename + ".rttm")
     with open(rttm_name, "w") as rttm: # rttm_dirs/파일명.rttm 저장
@@ -74,18 +77,21 @@ async def create_upload_file(file: UploadFile):
         line = line.replace('\r','').replace('\n','')
         line_arr = line.split(' ')
 
-        seg_start   = int(line_arr[3].replace('.',''))
+        seg_start    = int(line_arr[3].replace('.',''))
         seg_duration = int(line_arr[4].replace('.',''))
-        seg_speaker = line_arr[7]
-        seg_end     = seg_start + seg_duration
+        seg_speaker  = line_arr[7]
+        seg_end      = seg_start + seg_duration
         
+        # 텍스트가 없거나 WAV 파일 길이가 0인 경우 화자 ID 생성을 건너뜁니다.
+        if seg_duration == 0 or not seg_speaker.strip():
+            continue
+
         audio_segment_file_name = os.path.join(output_folder, seg_speaker + "_" + str(seg_start) + "_" + str(seg_end) + ".wav")
 
         audio2 = audio_segment[seg_start:seg_end]
         audio2.export(audio_segment_file_name, format="wav")
 
     speaker_texts      = {}    # 화자별 텍스트 저장을 위한 딕셔너리 초기화
-    speaker_time_texts = {}    # 화자별 대화 시간 저장을 위한 딕셔너리 초기화
     file_list = [f for f in os.listdir(output_folder) if f.endswith(".wav")]    # 세그먼트 파일 목록 가져오기
     print(file_list)
 
@@ -99,8 +105,7 @@ async def create_upload_file(file: UploadFile):
         seg_end_time   = int(file_name.split('_')[3].split('.')[0])  # 시작 시간 추출 (ms 단위)
         
         if speaker_id not in speaker_texts: # 화자 ID에 해당하는 텍스트 리스트가 없으면 초기화
-            speaker_texts[speaker_id]      = []   
-            speaker_time_texts[speaker_id] = []    
+            speaker_texts[speaker_id]      = {}   
         
         file_path = os.path.join(output_folder, file_name)  # 오디오 파일 경로 설정
         
@@ -115,10 +120,10 @@ async def create_upload_file(file: UploadFile):
                 start_time_str = f"{int(start_min):02d}:{int(start_sec):02d}"
                 end_time_str   = f"{int(end_min):02d}:{int(end_sec):02d}"
             
-                text      = f"{start_time_str} - {end_time_str} : {r.recognize_google(audio, language='ko')}"
+                text      = f"{r.recognize_google(audio, language='ko')}"
                 time_text = f"{start_time_str} - {end_time_str}" 
-                speaker_texts[speaker_id].append(text)
-                speaker_time_texts[speaker_id].append(time_text)
+                
+                speaker_texts[speaker_id][time_text] = text
                 print(f"화자 {speaker_id}: {text}")
             except sr.UnknownValueError:
                 print(f"화자 {speaker_id}: 인식 불가")
@@ -129,7 +134,7 @@ async def create_upload_file(file: UploadFile):
     # speaker_dir_name = os.path.join(speaker_dirs, org_filename + "_dict.pickle")
     # joblib.dump(speaker_texts, speaker_dir_name)
 
-    print("speaker_time_texts : " , speaker_time_texts)
+    print("speaker_time_texts : " , speaker_texts)
     selected_speaker = []
     # 화자별 텍스트 파일로 저장
     for speaker_id, texts in speaker_texts.items():
@@ -144,9 +149,8 @@ async def create_upload_file(file: UploadFile):
 
     response_data = {
           "org_filename"  : org_filename       # 원본파일명_타임스탬프.wav
-        , "speaker_texts" : speaker_texts      # {화자 코드 : 내용}
+        , "speaker_texts" : speaker_texts      # {화자 코드 : {시간:내용}}
         , "duration"      : duration           # 소요시간
-        , "elapsed_time"  : speaker_time_texts # 화자 대화 출력 시간
     }
 
     return JSONResponse(content=response_data)
