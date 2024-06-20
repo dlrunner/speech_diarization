@@ -1,5 +1,5 @@
 <div style="text-align: center;">
-	<img src="https://capsule-render.vercel.app/api?type=waving&color=auto&height=200&section=header&text=NlRunner-Team!&fontSize=90"  alt=""/>	
+	<img src="https://capsule-render.vercel.app/api?type=waving&color=auto&height=200&section=header&text=DLRunner-Team!&fontSize=90"  alt=""/>	
 </div>
 
 ## speech_diarization 
